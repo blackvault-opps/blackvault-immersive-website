@@ -241,34 +241,56 @@ body {
   animation: fadeSlideUp 1s ease 0.7s both;
 }
 
-/* === ORB CENTERPIECE === */
+/* === ORB HERO IMAGE === */
 .nexus-orb-section {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: clamp(300px, 65vw, 860px);
   margin: 2.5rem auto 1rem;
   animation: fadeIn 1.2s ease 0.6s both;
 }
 
-.nexus-orb-core {
-  position: absolute;
-  inset: 15%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(178, 102, 255, 0.4), rgba(138, 43, 226, 0.15) 50%, transparent 70%);
-  border: 1.5px solid rgba(138, 43, 226, 0.4);
-  box-shadow: 0 0 40px rgba(138, 43, 226, 0.3), inset 0 0 30px rgba(138, 43, 226, 0.15);
-  animation: orbPulse 3s ease-in-out infinite;
+.nexus-hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  clip-path: none;
+  mask: none;
+  filter: drop-shadow(0 0 40px rgba(138, 43, 226, 0.2));
 }
 
-.nexus-orb-ring-1 {
+.nexus-orb-glow-overlay {
   position: absolute;
-  inset: 5%;
+  left: 50%;
+  top: 50%;
+  width: 30%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
   border-radius: 50%;
-  border: 1px solid rgba(138, 43, 226, 0.2);
+  background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 65%);
+  box-shadow: 0 0 60px rgba(138, 43, 226, 0.2);
+  animation: orbGlow 4s ease-in-out infinite;
+}
+
+.nexus-orb-ring-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 43, 226, 0.25);
   animation: orbRingSpin 12s linear infinite;
 }
 
-.nexus-orb-ring-1::before {
+.nexus-orb-ring-overlay::before {
   content: "";
   position: absolute;
   top: -2px;
@@ -278,22 +300,6 @@ body {
   border-radius: 50%;
   background: var(--purple-light);
   box-shadow: 0 0 8px var(--purple-light);
-}
-
-.nexus-orb-ring-2 {
-  position: absolute;
-  inset: -5%;
-  border-radius: 50%;
-  border: 1px dashed rgba(138, 43, 226, 0.12);
-  animation: orbRingSpin 20s linear infinite reverse;
-}
-
-.nexus-orb-glow {
-  position: absolute;
-  inset: -30%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(138, 43, 226, 0.12) 0%, transparent 60%);
-  animation: orbGlow 4s ease-in-out infinite;
 }
 
 /* === GAMES SECTION === */
@@ -565,14 +571,9 @@ body {
   50% { opacity: 1; transform: scale(1.2); }
 }
 
-@keyframes orbPulse {
-  0%, 100% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.3), inset 0 0 30px rgba(138, 43, 226, 0.15); }
-  50% { box-shadow: 0 0 60px rgba(138, 43, 226, 0.45), inset 0 0 40px rgba(138, 43, 226, 0.25); }
-}
-
 @keyframes orbRingSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @keyframes orbGlow {
@@ -625,9 +626,8 @@ body {
   }
 
   .nexus-orb-section {
-    width: 160px;
-    height: 160px;
-    margin: 2rem auto 0.5rem;
+    width: 95%;
+    margin: 1.5rem auto 0.5rem;
   }
 
   .nexus-section {
@@ -698,12 +698,16 @@ body {
   <p class="nexus-hero-subtitle">Enter the Nexus</p>
   <p class="nexus-hero-tagline">Entertainment. Intelligence. Progression.</p>
 
-  <!-- Orb Centerpiece -->
+  <!-- Hero Artwork -->
   <div class="nexus-orb-section">
-    <div class="nexus-orb-glow"></div>
-    <div class="nexus-orb-ring-2"></div>
-    <div class="nexus-orb-ring-1"></div>
-    <div class="nexus-orb-core"></div>
+    <img
+      src="/assets/blackvault-vault-echo-orb-hero.png.png"
+      alt="Vault AI and Echo AI presenting the BlackVault Orb"
+      class="nexus-hero-image"
+      fetchpriority="high"
+    />
+    <div class="nexus-orb-glow-overlay" aria-hidden="true"></div>
+    <div class="nexus-orb-ring-overlay" aria-hidden="true"></div>
   </div>
 </section>
 
