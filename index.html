@@ -7,552 +7,446 @@
 <link rel="icon" type="image/png" href="/assets/blackvault-round-logo.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root {
-  --purple: #8a2be2;
-  --purple-light: #b266ff;
-  --purple-glow: rgba(138, 43, 226, 0.5);
-  --purple-subtle: rgba(138, 43, 226, 0.12);
-  --glass-white: rgba(255, 255, 255, 0.82);
-  --glass-border: rgba(255, 255, 255, 0.45);
-  --text-primary: #0a0a0a;
-  --text-secondary: #4a4a5a;
+  --purple: #6f19ff;
+  --ink: #15121b;
+  --muted: #716b7a;
+  --glass: rgba(255,255,255,.82);
 }
 
-html {
-  scroll-behavior: smooth;
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--ink);
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #ffffff;
-  color: var(--text-primary);
-  min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  background: radial-gradient(circle at 50% 42%, rgba(111,25,255,.10), transparent 28%),
+              linear-gradient(#fff 0 76%, #fbf8ff 100%);
 }
+
+button { font: inherit; cursor: pointer; }
 
 /* === HEADER === */
 .entry-header {
   position: fixed;
-  top: 1rem;
+  z-index: 30;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(92%, 1200px);
-  z-index: 100;
+  width: min(94vw, 1180px);
+  min-height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.85rem 1.5rem;
-  border-radius: 100px;
-  background: var(--glass-white);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06), 0 0 40px rgba(138, 43, 226, 0.04);
+  gap: 16px;
+  padding: 9px 10px 9px 18px;
+  border: 1px solid rgba(111,25,255,.10);
+  border-radius: 22px;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 18px 45px rgba(73,14,145,.10);
+  backdrop-filter: blur(18px);
 }
 
-.entry-header-logo {
+.brand-logo {
+  display: block;
+  width: min(280px, 42vw);
+  max-height: 52px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.account-actions {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
+  gap: 8px;
 }
 
-.entry-header-logo img {
-  width: 32px;
-  height: 32px;
-}
-
-.entry-header-logo span {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-}
-
-.entry-header-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.btn-signin {
-  padding: 0.5rem 1.1rem;
-  border-radius: 100px;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.btn-signin:hover {
-  color: var(--purple);
-}
-
-.btn-signup {
-  padding: 0.5rem 1.1rem;
-  border-radius: 100px;
-  border: 1px solid var(--purple-subtle);
-  background: var(--purple-subtle);
-  color: var(--purple);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-
-.btn-signup:hover {
-  background: var(--purple);
-  color: #fff;
-  border-color: var(--purple);
-}
-
-/* === MAIN ENTRY === */
-.entry-main {
-  display: flex;
-  flex-direction: column;
+.button {
+  min-height: 54px;
+  padding: 0 24px;
+  border-radius: 15px;
+  border: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 6rem 1rem 3rem;
+  gap: 10px;
+  font-weight: 800;
+  transition: .18s ease;
+}
+
+.button:hover { transform: translateY(-2px); }
+
+.button.small {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 13px;
+  font-size: .86rem;
+}
+
+.button.purple {
+  color: #fff;
+  background: linear-gradient(135deg, #923cff, #5c0bdc);
+  box-shadow: 0 12px 28px rgba(111,25,255,.25), 0 0 28px rgba(111,25,255,.10);
+}
+
+.button.glass {
+  color: #5d12d9;
+  border: 1px solid rgba(111,25,255,.40);
+  background: rgba(255,255,255,.74);
+  box-shadow: 0 10px 28px rgba(62,15,120,.07), inset 0 1px 0 rgba(255,255,255,.96);
+  backdrop-filter: blur(14px);
+}
+
+/* === ENTRY PAGE === */
+.entry-page {
+  min-height: 100svh;
+  padding: 108px 16px 28px;
+  display: grid;
+  place-items: center;
+}
+
+.entry-card {
+  width: min(1180px, 100%);
+  min-height: calc(100svh - 136px);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 18px 18px 30px;
+  border: 1px solid rgba(111,25,255,.08);
+  border-radius: 34px;
+  background: radial-gradient(circle at 50% 44%, rgba(120,39,255,.07), transparent 34%),
+              rgba(255,255,255,.92);
+  box-shadow: 0 22px 60px rgba(70,18,140,.12);
+  overflow: visible;
 }
 
 /* === SLOGAN === */
-.entry-slogan {
+.slogan {
+  margin: 0 0 2px;
   text-align: center;
-  margin-bottom: 1.5rem;
-  animation: fadeSlideUp 1s ease 0.2s both;
+  font-size: clamp(.68rem, 1.1vw, .92rem);
+  line-height: 1.7;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 800;
 }
 
-.entry-slogan p:first-child {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(0.72rem, 1.4vw, 0.82rem);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-}
-
-.entry-slogan p:last-child {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(0.82rem, 1.6vw, 0.95rem);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.slogan strong {
+  display: block;
   color: var(--purple);
 }
 
-/* === HERO ARTWORK === */
-.entry-hero-wrap {
+/* === HERO STAGE === */
+.hero-stage {
   position: relative;
-  width: clamp(320px, 70vw, 920px);
-  margin: 0 auto;
-  animation: fadeSlideUp 1.2s ease 0.5s both;
+  width: min(100%, 1040px);
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  isolation: isolate;
 }
 
-.entry-hero-image {
+.hero-art {
+  position: relative;
+  z-index: 2;
   display: block;
-  width: 100%;
+  width: min(100%, 1040px);
   height: auto;
   object-fit: contain;
   object-position: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  clip-path: none;
-  mask: none;
-  filter: none;
-  transform: none;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 22px 48px rgba(92,29,174,.10));
 }
 
-/* === ORB EFFECTS LAYER === */
+/* === ORB EFFECTS === */
 .orb-effects {
+  --orb: clamp(160px, 23vw, 330px);
   position: absolute;
+  z-index: 1;
   left: 50%;
-  top: 50%;
-  width: 30%;
+  top: 48%;
+  width: var(--orb);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 2;
 }
 
-.orb-glow {
+.orb-halo, .orb-ring {
   position: absolute;
-  inset: -20%;
+  inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(138, 43, 226, 0.18) 0%, transparent 70%);
-  animation: orbBreathe 3.5s ease-in-out infinite;
+}
+
+.orb-halo {
+  background: radial-gradient(circle, rgba(255,255,255,.88) 0 4%, rgba(206,169,255,.46) 14%, rgba(111,25,255,.16) 36%, transparent 68%);
+  box-shadow: 0 0 38px rgba(111,25,255,.30), 0 0 92px rgba(111,25,255,.16);
+  animation: orbBreath 3.2s ease-in-out infinite;
 }
 
 .orb-ring {
+  border: 1px solid rgba(111,25,255,.24);
+}
+
+.ring-one { animation: ringExpand 4.8s ease-out infinite; }
+.ring-two { animation: ringExpand 4.8s 2.4s ease-out infinite; }
+
+/* === ENTRY ACTIONS === */
+.entry-actions {
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.enter { position: relative; }
+
+.enter::after {
+  content: "";
   position: absolute;
-  inset: 5%;
+  inset: -2px;
+  border: 1px solid rgba(142,71,255,.52);
+  border-radius: inherit;
+  animation: buttonPulse 2.6s ease-out infinite;
+  pointer-events: none;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1.5px solid rgba(138, 43, 226, 0.3);
-  animation: orbRingExpand 4s ease-in-out infinite;
+  background: #fff;
+  box-shadow: 0 0 13px #fff;
+  animation: dotPulse 1.8s ease-in-out infinite;
 }
 
-.orb-ring-rotate {
-  position: absolute;
-  inset: -5%;
-  border-radius: 50%;
-  border: 1px solid transparent;
-  border-top-color: rgba(178, 102, 255, 0.4);
-  border-right-color: rgba(178, 102, 255, 0.15);
-  animation: orbSpin 8s linear infinite;
+.age-note {
+  margin: 15px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: .78rem;
 }
 
-.orb-particles {
-  position: absolute;
-  inset: -30%;
-  border-radius: 50%;
-}
-
-.orb-particle {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--purple-light);
-  opacity: 0;
-  animation: particleFloat 5s ease-in-out infinite;
-}
-
-.orb-particle:nth-child(1) { left: 20%; top: 15%; animation-delay: 0s; }
-.orb-particle:nth-child(2) { left: 75%; top: 25%; animation-delay: 1s; }
-.orb-particle:nth-child(3) { left: 40%; top: 80%; animation-delay: 2s; }
-.orb-particle:nth-child(4) { left: 85%; top: 65%; animation-delay: 3s; }
-.orb-particle:nth-child(5) { left: 10%; top: 60%; animation-delay: 0.5s; }
-.orb-particle:nth-child(6) { left: 60%; top: 10%; animation-delay: 2.5s; }
-
-/* Orb connection active state */
-.orb-effects.connecting .orb-glow {
-  animation: orbGlowIntense 0.8s ease-in-out infinite;
-}
-
-.orb-effects.connecting .orb-ring {
-  animation: orbRingPulse 0.6s ease-in-out infinite;
-  border-color: rgba(138, 43, 226, 0.7);
-}
-
-.orb-effects.connecting .orb-ring-rotate {
-  animation: orbSpin 2s linear infinite;
-  border-top-color: rgba(178, 102, 255, 0.8);
+.age-note span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 37px;
+  min-height: 27px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #17131e;
+  color: #fff;
+  font-weight: 800;
 }
 
 /* === CONNECTION STATUS === */
-.orb-status {
+.connection-status {
   position: absolute;
+  z-index: 5;
   left: 50%;
-  bottom: -2rem;
+  bottom: 6%;
   transform: translateX(-50%);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  width: max-content;
+  max-width: 80%;
+  font-size: .72rem;
+  letter-spacing: .17em;
+  font-weight: 800;
   color: var(--purple);
-  white-space: nowrap;
+  text-shadow: 0 0 18px rgba(111,25,255,.22);
   opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
+  transition: .22s ease;
 }
 
-.orb-status.visible {
+.connection-status.visible {
   opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
 }
 
-/* === CTA BUTTONS === */
-.entry-cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2.5rem;
-  animation: fadeSlideUp 1s ease 0.8s both;
+.hero-stage.is-connecting .orb-halo {
+  animation: connectPulse .9s ease-in-out infinite;
 }
 
-.btn-enter {
-  position: relative;
-  padding: 0.9rem 2rem;
-  border-radius: 100px;
-  border: none;
-  background: var(--purple);
-  color: #ffffff;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 0 20px var(--purple-glow), 0 4px 15px rgba(138, 43, 226, 0.3);
-  animation: btnPulse 3s ease-in-out infinite;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-enter:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 35px var(--purple-glow), 0 8px 25px rgba(138, 43, 226, 0.4);
-}
-
-.btn-connect {
-  padding: 0.9rem 2rem;
-  border-radius: 100px;
-  border: 1.5px solid rgba(138, 43, 226, 0.4);
-  background: rgba(255, 255, 255, 0.6);
-  color: var(--purple);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 12px rgba(138, 43, 226, 0.08);
-  transition: all 0.25s;
-}
-
-.btn-connect:hover {
-  border-color: var(--purple);
-  background: rgba(138, 43, 226, 0.06);
-  box-shadow: 0 0 20px rgba(138, 43, 226, 0.15);
-}
-
-.btn-connect:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* === AGE MODAL === */
-.age-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-}
-
-.age-modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.age-modal {
-  width: min(92%, 440px);
-  padding: 2.5rem 2rem;
-  border-radius: 1.5rem;
-  background: var(--glass-white);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(24px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 0 60px rgba(138, 43, 226, 0.08);
-  text-align: center;
-  transform: translateY(20px) scale(0.97);
-  transition: transform 0.35s ease;
-}
-
-.age-modal-overlay.active .age-modal {
-  transform: translateY(0) scale(1);
-}
-
-.age-modal h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-
-.age-modal p {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
-}
-
-.age-modal-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.btn-confirm-age {
-  padding: 0.9rem 1.5rem;
-  border-radius: 100px;
-  border: none;
-  background: var(--purple);
-  color: #ffffff;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 0 20px var(--purple-glow);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-confirm-age:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 30px var(--purple-glow);
-}
-
-.btn-exit {
-  padding: 0.75rem 1.5rem;
-  border-radius: 100px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+/* === AGE DIALOG === */
+.age-dialog {
+  width: min(92vw, 520px);
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
   background: transparent;
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.2s;
 }
 
-.btn-exit:hover {
-  border-color: rgba(0, 0, 0, 0.3);
+.age-dialog::backdrop {
+  background: rgba(15,8,24,.46);
+  backdrop-filter: blur(10px);
+}
+
+.age-card {
+  margin: 0;
+  padding: 32px;
+  border: 1px solid rgba(111,25,255,.16);
+  border-radius: 28px;
+  background: radial-gradient(circle at 82% 0%, rgba(151,75,255,.12), transparent 34%),
+              rgba(255,255,255,.98);
+  box-shadow: 0 34px 90px rgba(55,12,112,.24), 0 0 42px rgba(111,25,255,.10);
+}
+
+.mini-orb {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  margin-bottom: 18px;
+  background: radial-gradient(circle, #fff 0 8%, #dabaff 20%, #7e25f8 48%, #281041 72%);
+  box-shadow: 0 0 32px rgba(111,25,255,.34);
+}
+
+.modal-kicker {
+  margin: 0 0 10px;
+  color: var(--purple);
+  font-size: .68rem;
+  letter-spacing: .17em;
+  font-weight: 800;
+}
+
+.age-card h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+}
+
+.age-card > p:not(.modal-kicker) {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.modal-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
 }
 
 /* === CURSOR AURA === */
 .cursor-aura {
   position: fixed;
-  width: 24px;
-  height: 24px;
+  z-index: 100;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(138, 43, 226, 0.35) 0%, transparent 70%);
   pointer-events: none;
-  z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
   opacity: 0;
+  background: radial-gradient(circle, rgba(142,76,255,.20), rgba(111,25,255,.07) 44%, transparent 72%);
+  box-shadow: 0 0 24px rgba(111,25,255,.14);
 }
 
-.cursor-aura.visible {
-  opacity: 1;
-}
+body.cursor-live .cursor-aura { opacity: 1; }
 
 /* === KEYFRAMES === */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes orbBreath {
+  0%, 100% { transform: scale(.95); opacity: .66; }
+  50% { transform: scale(1.06); opacity: 1; }
 }
 
-@keyframes orbBreathe {
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.92); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+@keyframes ringExpand {
+  0% { transform: scale(.86); opacity: 0; }
+  14% { opacity: .52; }
+  100% { transform: scale(1.55); opacity: 0; }
 }
 
-@keyframes orbRingExpand {
-  0%, 100% { opacity: 0.4; transform: scale(0.95); }
-  50% { opacity: 0.8; transform: scale(1.08); }
+@keyframes connectPulse {
+  0%, 100% { transform: scale(.95); opacity: .74; filter: brightness(1); }
+  50% { transform: scale(1.12); opacity: 1; filter: brightness(1.25); }
 }
 
-@keyframes orbSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes buttonPulse {
+  0% { transform: scale(1); opacity: .62; }
+  78%, 100% { transform: scale(1.12); opacity: 0; }
 }
 
-@keyframes particleFloat {
-  0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
-  30% { opacity: 0.7; transform: translateY(-8px) scale(1); }
-  70% { opacity: 0.4; transform: translateY(-16px) scale(0.8); }
-}
-
-@keyframes orbGlowIntense {
-  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-}
-
-@keyframes orbRingPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.15); opacity: 1; }
-}
-
-@keyframes btnPulse {
-  0%, 100% { box-shadow: 0 0 20px var(--purple-glow), 0 4px 15px rgba(138, 43, 226, 0.3); }
-  50% { box-shadow: 0 0 30px var(--purple-glow), 0 4px 20px rgba(138, 43, 226, 0.45); }
+@keyframes dotPulse {
+  0%, 100% { transform: scale(.82); opacity: .72; }
+  50% { transform: scale(1.25); opacity: 1; }
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
+@media (max-width: 760px) {
   .entry-header {
-    padding: 0.7rem 1rem;
-    top: 0.75rem;
-    width: 94%;
+    top: 10px;
+    min-height: 60px;
+    padding: 7px 8px 7px 12px;
+    border-radius: 19px;
   }
 
-  .entry-header-logo img {
-    width: 28px;
-    height: 28px;
+  .brand-logo { width: min(168px, 42vw); }
+
+  .button.small {
+    min-height: 39px;
+    padding: 0 11px;
+    font-size: .76rem;
   }
 
-  .entry-header-logo span {
-    font-size: 0.92rem;
+  .entry-page { padding: 90px 10px 20px; }
+
+  .entry-card {
+    min-height: calc(100svh - 108px);
+    padding: 16px 10px 24px;
+    border-radius: 26px;
   }
 
-  .entry-main {
-    padding: 5.5rem 0.75rem 2rem;
+  .slogan {
+    font-size: .60rem;
+    letter-spacing: .11em;
   }
 
-  .entry-hero-wrap {
-    width: 95%;
-  }
-
-  .entry-slogan p:first-child {
-    font-size: 0.65rem;
-  }
-
-  .entry-slogan p:last-child {
-    font-size: 0.72rem;
-  }
-
-  .entry-cta {
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 2rem;
-  }
-
-  .btn-enter, .btn-connect {
-    width: 100%;
-    max-width: 280px;
-  }
+  .orb-effects { --orb: clamp(130px, 34vw, 220px); }
+  .entry-actions { width: min(94%, 560px); }
+  .button { flex: 1 1 220px; }
 }
 
-@media (max-width: 430px) {
-  .entry-hero-wrap {
+@media (max-width: 480px) {
+  .brand-logo { width: 122px; }
+  .account-actions { gap: 5px; }
+
+  .button.small {
+    padding: 0 9px;
+    font-size: .70rem;
+  }
+
+  .hero-art {
+    width: 108%;
+    max-width: none;
+  }
+
+  .entry-actions {
+    display: grid;
+    width: 92%;
+  }
+
+  .button {
     width: 100%;
+    min-height: 50px;
   }
 
-  .entry-header-logo span {
-    font-size: 0.85rem;
-  }
+  .age-note { font-size: .68rem; }
 
-  .btn-signin, .btn-signup {
-    font-size: 0.78rem;
-    padding: 0.45rem 0.85rem;
-  }
+  .age-card { padding: 26px 21px; }
 }
 
-@media (min-width: 1440px) {
-  .entry-hero-wrap {
-    width: 60vw;
-    max-width: 1000px;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
   }
 }
 </style>
@@ -561,176 +455,149 @@ body {
 
 <!-- Header -->
 <header class="entry-header">
-  <div class="entry-header-logo">
-    <img src="/assets/blackvault-round-logo.png" alt="BlackVault"/>
-    <span>BlackVault</span>
-  </div>
-  <div class="entry-header-actions">
-    <button class="btn-signin" type="button">Sign In</button>
-    <button class="btn-signup" type="button">Sign Up</button>
+  <img src="/assets/blackvault-horizontal-logo.png" alt="BlackVault" class="brand-logo"/>
+  <div class="account-actions">
+    <button class="button small glass" type="button">Sign In</button>
+    <button class="button small purple" type="button">Sign Up</button>
   </div>
 </header>
 
-<!-- Main Entry -->
-<main class="entry-main">
+<!-- Entry Page -->
+<main class="entry-page">
+  <div class="entry-card">
 
-  <!-- Slogan -->
-  <div class="entry-slogan">
-    <p>Beyond Games. Beyond Reality.</p>
-    <p>This is BlackVault.</p>
-  </div>
+    <!-- Slogan -->
+    <p class="slogan">
+      Beyond Games. Beyond Reality.<br/>
+      <strong>This is BlackVault.</strong>
+    </p>
 
-  <!-- Hero Artwork -->
-  <div class="entry-hero-wrap">
-    <img
-      src="/assets/blackvault-vault-echo-orb-hero.png.png"
-      alt="Vault AI and Echo AI presenting the BlackVault Orb"
-      class="entry-hero-image"
-      fetchpriority="high"
-    />
+    <!-- Hero Stage -->
+    <div class="hero-stage" id="heroStage">
+      <img
+        src="/assets/blackvault-vault-echo-orb-hero.png.png"
+        alt="Vault AI and Echo AI presenting the BlackVault Orb"
+        class="hero-art"
+        fetchpriority="high"
+      />
 
-    <!-- Orb Effects Layer -->
-    <div class="orb-effects" id="orbEffects">
-      <div class="orb-glow"></div>
-      <div class="orb-ring"></div>
-      <div class="orb-ring-rotate"></div>
-      <div class="orb-particles">
-        <span class="orb-particle"></span>
-        <span class="orb-particle"></span>
-        <span class="orb-particle"></span>
-        <span class="orb-particle"></span>
-        <span class="orb-particle"></span>
-        <span class="orb-particle"></span>
+      <!-- Orb Effects -->
+      <div class="orb-effects">
+        <div class="orb-halo"></div>
+        <div class="orb-ring ring-one"></div>
+        <div class="orb-ring ring-two"></div>
       </div>
+
+      <!-- Connection Status -->
+      <div class="connection-status" id="connectionStatus"></div>
     </div>
 
-    <!-- Connection Status -->
-    <div class="orb-status" id="orbStatus"></div>
-  </div>
+    <!-- Entry Actions -->
+    <div class="entry-actions">
+      <button class="button purple enter" type="button" id="enterBlackVault">
+        <span class="pulse-dot"></span>
+        Enter BlackVault
+      </button>
+      <button class="button glass" type="button" id="initiateConnection">
+        Initiate Connection
+      </button>
+    </div>
 
-  <!-- CTA Buttons -->
-  <div class="entry-cta">
-    <button class="btn-enter" type="button" id="btnEnter">Enter BlackVault</button>
-    <button class="btn-connect" type="button" id="btnConnect">Initiate Connection</button>
-  </div>
+    <p class="age-note"><span>18+</span> Age-restricted entertainment</p>
 
+  </div>
 </main>
 
-<!-- Age Confirmation Modal -->
-<div class="age-modal-overlay" id="ageModal">
-  <div class="age-modal">
-    <h2>Age Confirmation</h2>
+<!-- Age Dialog -->
+<dialog class="age-dialog" id="ageDialog">
+  <div class="age-card">
+    <div class="mini-orb"></div>
+    <p class="modal-kicker">AGE CONFIRMATION</p>
+    <h1>Verify Your Age</h1>
     <p>BlackVault includes entertainment experiences intended for adult members. Please confirm that you are 18 years of age or older to continue.</p>
-    <div class="age-modal-actions">
-      <button class="btn-confirm-age" type="button" id="btnConfirmAge">I Am 18+ — Enter BlackVault</button>
-      <button class="btn-exit" type="button" id="btnExit">Exit</button>
+    <div class="modal-actions">
+      <button class="button purple" type="button" id="ageConfirm" value="confirm">I Am 18+ — Enter BlackVault</button>
+      <button class="button glass" type="button" id="ageExit">Exit</button>
     </div>
   </div>
-</div>
+</dialog>
 
-<!-- Cursor Aura (desktop only) -->
-<div class="cursor-aura" id="cursorAura"></div>
+<!-- Cursor Aura -->
+<div class="cursor-aura"></div>
 
 <script>
 (function() {
-  // === RETURN VISIT LOGIC ===
-  const params = new URLSearchParams(window.location.search);
-  const forceEntry = params.has('entry');
-
-  if (!forceEntry && localStorage.getItem('blackvault_age_verified') === 'true') {
+  // Auto-redirect if already verified
+  var params = new URLSearchParams(window.location.search);
+  if (!params.has('entry') && localStorage.getItem('blackvault_age_verified') === 'true') {
     window.location.replace('/home.html');
     return;
   }
 
-  // === DOM REFS ===
-  const btnEnter = document.getElementById('btnEnter');
-  const btnConnect = document.getElementById('btnConnect');
-  const ageModal = document.getElementById('ageModal');
-  const btnConfirmAge = document.getElementById('btnConfirmAge');
-  const btnExit = document.getElementById('btnExit');
-  const orbEffects = document.getElementById('orbEffects');
-  const orbStatus = document.getElementById('orbStatus');
-  const cursorAura = document.getElementById('cursorAura');
+  var enterButton = document.getElementById('enterBlackVault');
+  var connectionButton = document.getElementById('initiateConnection');
+  var status = document.getElementById('connectionStatus');
+  var stage = document.getElementById('heroStage');
+  var ageDialog = document.getElementById('ageDialog');
+  var ageConfirm = document.getElementById('ageConfirm');
+  var ageExit = document.getElementById('ageExit');
+  var cursorAura = document.querySelector('.cursor-aura');
 
-  // === ENTER BLACKVAULT → AGE MODAL ===
-  btnEnter.addEventListener('click', function() {
-    ageModal.classList.add('active');
+  var sleep = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
+
+  // Connection sequence
+  async function runConnection() {
+    if (connectionButton.disabled) return;
+    connectionButton.disabled = true;
+    stage.classList.add('is-connecting');
+    status.classList.add('visible');
+
+    var messages = ['SIGNAL DETECTED', 'CONNECTION ESTABLISHED', 'BLACKVAULT ONLINE'];
+    for (var i = 0; i < messages.length; i++) {
+      status.textContent = messages[i];
+      await sleep(1050);
+    }
+
+    await sleep(400);
+    status.classList.remove('visible');
+    stage.classList.remove('is-connecting');
+    connectionButton.disabled = false;
+  }
+
+  connectionButton.addEventListener('click', runConnection);
+
+  // Enter BlackVault → open age dialog
+  enterButton.addEventListener('click', function() {
+    if (typeof ageDialog.showModal === 'function') {
+      ageDialog.showModal();
+    }
   });
 
-  // === AGE CONFIRMATION ===
-  btnConfirmAge.addEventListener('click', function() {
+  // Age confirm
+  ageConfirm.addEventListener('click', function() {
     localStorage.setItem('blackvault_age_verified', 'true');
+    ageDialog.close('confirm');
     window.location.href = '/home.html';
   });
 
-  // === EXIT ===
-  btnExit.addEventListener('click', function() {
-    ageModal.classList.remove('active');
+  // Exit
+  ageExit.addEventListener('click', function() {
+    ageDialog.close('cancel');
   });
 
-  // Close modal on overlay click
-  ageModal.addEventListener('click', function(e) {
-    if (e.target === ageModal) {
-      ageModal.classList.remove('active');
-    }
-  });
-
-  // === INITIATE CONNECTION SEQUENCE ===
-  let connectionActive = false;
-
-  btnConnect.addEventListener('click', function() {
-    if (connectionActive) return;
-    connectionActive = true;
-    btnConnect.disabled = true;
-
-    orbEffects.classList.add('connecting');
-
-    const steps = [
-      { text: 'Signal Detected', delay: 0 },
-      { text: 'Connection Established', delay: 1800 },
-      { text: 'BlackVault Online', delay: 3400 },
-    ];
-
-    steps.forEach(function(step) {
-      setTimeout(function() {
-        orbStatus.textContent = step.text;
-        orbStatus.classList.add('visible');
-      }, step.delay);
-    });
-
-    setTimeout(function() {
-      orbStatus.classList.remove('visible');
-      orbEffects.classList.remove('connecting');
-      connectionActive = false;
-      btnConnect.disabled = false;
-    }, 5200);
-  });
-
-  // === CURSOR AURA (desktop only) ===
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  if (!isTouchDevice) {
-    let mouseX = 0, mouseY = 0;
-    let auraX = 0, auraY = 0;
-
-    document.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      cursorAura.classList.add('visible');
-    });
-
-    document.addEventListener('mouseleave', function() {
-      cursorAura.classList.remove('visible');
-    });
-
-    function animateAura() {
-      auraX += (mouseX - auraX) * 0.15;
-      auraY += (mouseY - auraY) * 0.15;
-      cursorAura.style.left = auraX + 'px';
-      cursorAura.style.top = auraY + 'px';
-      requestAnimationFrame(animateAura);
-    }
-    animateAura();
+  // Cursor aura (pointer devices only)
+  if (window.matchMedia('(pointer: fine)').matches) {
+    var mx = -100, my = -100, ax = -100, ay = -100;
+    document.body.classList.add('cursor-live');
+    window.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+    var animate = function() {
+      ax += (mx - ax) * 0.15;
+      ay += (my - ay) * 0.15;
+      cursorAura.style.left = ax + 'px';
+      cursorAura.style.top = ay + 'px';
+      requestAnimationFrame(animate);
+    };
+    animate();
   }
 })();
 </script>
