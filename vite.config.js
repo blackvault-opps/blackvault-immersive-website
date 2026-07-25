@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         home: resolve(__dirname, 'home.html'),
+        nexus: resolve(__dirname, 'nexus.html'),
       },
     },
   },

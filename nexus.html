@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BlackVault Nexus™ — Entertainment. Intelligence. Progression.</title>
+<link rel="icon" type="image/png" href="/assets/blackvault-round-logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --nexus-bg: #06040a;
+  --nexus-surface: #0d0a14;
+  --nexus-card: #110e18;
+  --nexus-border: rgba(138, 43, 226, 0.18);
+  --nexus-border-hover: rgba(138, 43, 226, 0.4);
+  --purple: #8a2be2;
+  --purple-light: #b266ff;
+  --purple-bright: #c084fc;
+  --purple-glow: rgba(138, 43, 226, 0.5);
+  --purple-subtle: rgba(138, 43, 226, 0.08);
+  --gold: #c9a84c;
+  --gold-subtle: rgba(201, 168, 76, 0.15);
+  --silver: #c0c0d0;
+  --text-primary: #f0eef4;
+  --text-secondary: #9590a8;
+  --text-muted: #5e586e;
+  --glass: rgba(17, 14, 24, 0.75);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--nexus-bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === AMBIENT BACKGROUND === */
+.nexus-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.nexus-ambient::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120vw;
+  height: 60vh;
+  background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.08) 0%, transparent 65%);
+}
+
+.nexus-ambient::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 40vh;
+  background: radial-gradient(ellipse at center bottom, rgba(138, 43, 226, 0.04) 0%, transparent 60%);
+}
+
+/* === NAV === */
+.nexus-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 2rem;
+  background: rgba(6, 4, 10, 0.88);
+  border-bottom: 1px solid var(--nexus-border);
+  backdrop-filter: blur(20px);
+}
+
+.nexus-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.nexus-nav-brand img {
+  width: 30px;
+  height: 30px;
+}
+
+.nexus-nav-brand span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.nexus-nav-brand small {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  margin-left: 0.4rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  background: rgba(138, 43, 226, 0.08);
+}
+
+.nexus-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+}
+
+.nexus-nav-links a {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nexus-nav-links a:hover,
+.nexus-nav-links a.active {
+  color: var(--text-primary);
+  background: var(--purple-subtle);
+}
+
+.nexus-nav-links a.active {
+  color: var(--purple-light);
+}
+
+.nexus-nav-return {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.2s;
+}
+
+.nexus-nav-return:hover {
+  color: var(--text-secondary);
+}
+
+.nexus-nav-return .material-symbols-outlined {
+  font-size: 14px;
+}
+
+/* === HERO === */
+.nexus-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+}
+
+.nexus-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  border: 1px solid var(--nexus-border);
+  background: var(--purple-subtle);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.8s ease 0.2s both;
+}
+
+.nexus-hero-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--purple-light);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.nexus-hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  animation: fadeSlideUp 1s ease 0.3s both;
+}
+
+.nexus-hero-title span {
+  background: linear-gradient(135deg, var(--purple-light), var(--purple-bright), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nexus-hero-subtitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  animation: fadeSlideUp 1s ease 0.5s both;
+}
+
+.nexus-hero-tagline {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: fadeSlideUp 1s ease 0.7s both;
+}
+
+/* === ORB CENTERPIECE === */
+.nexus-orb-section {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 2.5rem auto 1rem;
+  animation: fadeIn 1.2s ease 0.6s both;
+}
+
+.nexus-orb-core {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(178, 102, 255, 0.4), rgba(138, 43, 226, 0.15) 50%, transparent 70%);
+  border: 1.5px solid rgba(138, 43, 226, 0.4);
+  box-shadow: 0 0 40px rgba(138, 43, 226, 0.3), inset 0 0 30px rgba(138, 43, 226, 0.15);
+  animation: orbPulse 3s ease-in-out infinite;
+}
+
+.nexus-orb-ring-1 {
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  animation: orbRingSpin 12s linear infinite;
+}
+
+.nexus-orb-ring-1::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--purple-light);
+  box-shadow: 0 0 8px var(--purple-light);
+}
+
+.nexus-orb-ring-2 {
+  position: absolute;
+  inset: -5%;
+  border-radius: 50%;
+  border: 1px dashed rgba(138, 43, 226, 0.12);
+  animation: orbRingSpin 20s linear infinite reverse;
+}
+
+.nexus-orb-glow {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(138, 43, 226, 0.12) 0%, transparent 60%);
+  animation: orbGlow 4s ease-in-out infinite;
+}
+
+/* === GAMES SECTION === */
+.nexus-section {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.nexus-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.nexus-section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.nexus-section-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* === GAME GRID === */
+.nexus-game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+/* === GAME CARD === */
+.nexus-game-card {
+  position: relative;
+  border-radius: 1.25rem;
+  border: 1px solid var(--nexus-border);
+  background: var(--nexus-card);
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.nexus-game-card:hover {
+  border-color: var(--nexus-border-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(138, 43, 226, 0.12), 0 0 30px rgba(138, 43, 226, 0.06);
+}
+
+.nexus-game-artwork {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nexus-game-artwork-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+}
+
+.game-art-vault-spin .nexus-game-artwork-bg {
+  background: linear-gradient(135deg, #0d0820, #1a0a3a 50%, #0d0820);
+}
+.game-art-vault-spin .nexus-game-artwork-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 60%, rgba(138, 43, 226, 0.3) 0%, transparent 50%);
+}
+
+.game-art-orb-rush .nexus-game-artwork-bg {
+  background: linear-gradient(135deg, #080420, #12083a 50%, #080420);
+}
+.game-art-orb-rush .nexus-game-artwork-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(178, 102, 255, 0.25) 0%, transparent 45%);
+}
+
+.game-art-megaways .nexus-game-artwork-bg {
+  background: linear-gradient(135deg, #0a0518, #180a38 50%, #0a0518);
+}
+.game-art-megaways .nexus-game-artwork-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 70%, rgba(138, 43, 226, 0.2) 0%, transparent 55%);
+}
+
+.game-art-realm-jackpot .nexus-game-artwork-bg {
+  background: linear-gradient(135deg, #0a0810, #1a0e30 50%, #0a0810);
+}
+.game-art-realm-jackpot .nexus-game-artwork-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.15) 0%, transparent 50%);
+}
+
+.game-art-signal-break .nexus-game-artwork-bg {
+  background: linear-gradient(135deg, #060414, #140830 50%, #060414);
+}
+.game-art-signal-break .nexus-game-artwork-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(138, 43, 226, 0.2) 0%, transparent 40%), radial-gradient(circle at 70% 50%, rgba(178, 102, 255, 0.15) 0%, transparent 40%);
+}
+
+.game-art-vault-keys .nexus-game-artwork-bg {
+  background: linear-gradient(135deg, #08060e, #160c2e 50%, #08060e);
+}
+.game-art-vault-keys .nexus-game-artwork-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 55%, rgba(201, 168, 76, 0.12) 0%, transparent 45%);
+}
+
+.nexus-game-artwork-icon {
+  position: relative;
+  z-index: 2;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(138, 43, 226, 0.4);
+  background: rgba(138, 43, 226, 0.1);
+  box-shadow: 0 0 24px rgba(138, 43, 226, 0.2);
+}
+
+.nexus-game-artwork-icon .material-symbols-outlined {
+  font-size: 28px;
+  color: var(--purple-light);
+}
+
+.game-art-realm-jackpot .nexus-game-artwork-icon,
+.game-art-vault-keys .nexus-game-artwork-icon {
+  border-color: rgba(201, 168, 76, 0.4);
+  background: rgba(201, 168, 76, 0.08);
+  box-shadow: 0 0 24px rgba(201, 168, 76, 0.15);
+}
+
+.game-art-realm-jackpot .nexus-game-artwork-icon .material-symbols-outlined,
+.game-art-vault-keys .nexus-game-artwork-icon .material-symbols-outlined {
+  color: var(--gold);
+}
+
+.nexus-game-category {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 3;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  background: rgba(6, 4, 10, 0.8);
+  border: 1px solid rgba(138, 43, 226, 0.25);
+  backdrop-filter: blur(8px);
+}
+
+.nexus-game-body {
+  padding: 1.25rem;
+}
+
+.nexus-game-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.nexus-game-desc {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.nexus-game-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nexus-game-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nexus-game-progress-bar {
+  width: 60px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(138, 43, 226, 0.15);
+  overflow: hidden;
+}
+
+.nexus-game-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--purple), var(--purple-light));
+}
+
+.nexus-game-progress-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.nexus-game-play {
+  padding: 0.5rem 1.1rem;
+  border-radius: 100px;
+  border: none;
+  background: var(--purple);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(138, 43, 226, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nexus-game-play:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+}
+
+/* === KEYFRAMES === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes orbPulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.3), inset 0 0 30px rgba(138, 43, 226, 0.15); }
+  50% { box-shadow: 0 0 60px rgba(138, 43, 226, 0.45), inset 0 0 40px rgba(138, 43, 226, 0.25); }
+}
+
+@keyframes orbRingSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbGlow {
+  0%, 100% { opacity: 0.6; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* === MOBILE NAV === */
+.nexus-nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.4rem;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .nexus-game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .nexus-nav {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .nexus-nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    display: none;
+  }
+
+  .nexus-nav-links.open {
+    display: flex;
+  }
+
+  .nexus-nav-mobile-toggle {
+    display: block;
+  }
+
+  .nexus-hero {
+    padding: 3rem 1rem 2rem;
+  }
+
+  .nexus-orb-section {
+    width: 160px;
+    height: 160px;
+    margin: 2rem auto 0.5rem;
+  }
+
+  .nexus-section {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .nexus-game-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .nexus-game-artwork {
+    height: 150px;
+  }
+}
+
+@media (max-width: 430px) {
+  .nexus-nav-brand small {
+    display: none;
+  }
+
+  .nexus-hero-title {
+    font-size: 1.8rem;
+  }
+
+  .nexus-game-body {
+    padding: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="nexus-ambient"></div>
+
+<!-- Navigation -->
+<nav class="nexus-nav">
+  <div class="nexus-nav-brand">
+    <img src="/assets/blackvault-round-logo.png" alt="BlackVault"/>
+    <span>BlackVault</span>
+    <small>Nexus</small>
+  </div>
+
+  <button class="nexus-nav-mobile-toggle" id="navToggle" type="button" aria-label="Toggle navigation">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+
+  <ul class="nexus-nav-links" id="navLinks">
+    <li><a href="#" class="active">Nexus Home</a></li>
+    <li><a href="#games">Games</a></li>
+    <li><a href="#missions">Missions</a></li>
+    <li><a href="#rewards">Rewards</a></li>
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#profile">Profile</a></li>
+  </ul>
+
+  <a href="/home.html" class="nexus-nav-return">
+    <span class="material-symbols-outlined">arrow_back</span>
+    BlackVault Home
+  </a>
+</nav>
+
+<!-- Hero -->
+<section class="nexus-hero">
+  <div class="nexus-hero-badge">BlackVault Universe™ — Nexus Division</div>
+
+  <h1 class="nexus-hero-title"><span>BlackVault Nexus</span>™</h1>
+  <p class="nexus-hero-subtitle">Enter the Nexus</p>
+  <p class="nexus-hero-tagline">Entertainment. Intelligence. Progression.</p>
+
+  <!-- Orb Centerpiece -->
+  <div class="nexus-orb-section">
+    <div class="nexus-orb-glow"></div>
+    <div class="nexus-orb-ring-2"></div>
+    <div class="nexus-orb-ring-1"></div>
+    <div class="nexus-orb-core"></div>
+  </div>
+</section>
+
+<!-- Games Section -->
+<section class="nexus-section" id="games">
+  <div class="nexus-section-header">
+    <h2 class="nexus-section-title">Game Experiences</h2>
+    <span class="nexus-section-count">6 available</span>
+  </div>
+
+  <div class="nexus-game-grid">
+
+    <!-- Vault Spin -->
+    <article class="nexus-game-card">
+      <div class="nexus-game-artwork game-art-vault-spin">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">casino</span>
+        </div>
+        <span class="nexus-game-category">Classic Spin</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Vault Spin™</h3>
+        <p class="nexus-game-desc">Classic BlackVault slot experience with Orb symbols, Vault Keys, and realm crystal combinations.</p>
+        <div class="nexus-game-footer">
+          <div class="nexus-game-progress">
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:12%"></div></div>
+            <span class="nexus-game-progress-label">12% XP</span>
+          </div>
+          <button class="nexus-game-play" type="button">Play</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Orb Rush -->
+    <article class="nexus-game-card">
+      <div class="nexus-game-artwork game-art-orb-rush">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">bolt</span>
+        </div>
+        <span class="nexus-game-category">High Energy</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Orb Rush™</h3>
+        <p class="nexus-game-desc">High-energy multi-reel Orb-based game with cascading signal fragments and multiplier surges.</p>
+        <div class="nexus-game-footer">
+          <div class="nexus-game-progress">
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:5%"></div></div>
+            <span class="nexus-game-progress-label">5% XP</span>
+          </div>
+          <button class="nexus-game-play" type="button">Play</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Nexus Megaways -->
+    <article class="nexus-game-card">
+      <div class="nexus-game-artwork game-art-megaways">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">grid_view</span>
+        </div>
+        <span class="nexus-game-category">Variable Reel</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Nexus Megaways™</h3>
+        <p class="nexus-game-desc">Variable-reel gameplay with changing symbol combinations across Nexus dimensions and AI portraits.</p>
+        <div class="nexus-game-footer">
+          <div class="nexus-game-progress">
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:0%"></div></div>
+            <span class="nexus-game-progress-label">0% XP</span>
+          </div>
+          <button class="nexus-game-play" type="button">Play</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Realm Jackpot -->
+    <article class="nexus-game-card">
+      <div class="nexus-game-artwork game-art-realm-jackpot">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">diamond</span>
+        </div>
+        <span class="nexus-game-category">Progressive</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Realm Jackpot™</h3>
+        <p class="nexus-game-desc">Progressive in-system jackpot using Nexus progression rewards, realm access tiers, and achievement milestones.</p>
+        <div class="nexus-game-footer">
+          <div class="nexus-game-progress">
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:8%"></div></div>
+            <span class="nexus-game-progress-label">8% XP</span>
+          </div>
+          <button class="nexus-game-play" type="button">Play</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Signal Break -->
+    <article class="nexus-game-card">
+      <div class="nexus-game-artwork game-art-signal-break">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">sensors</span>
+        </div>
+        <span class="nexus-game-category">Feature-Driven</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Signal Break™</h3>
+        <p class="nexus-game-desc">Feature-driven game using signal detection, anomalies, multipliers, and bonus events from the BlackVault network.</p>
+        <div class="nexus-game-footer">
+          <div class="nexus-game-progress">
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:3%"></div></div>
+            <span class="nexus-game-progress-label">3% XP</span>
+          </div>
+          <button class="nexus-game-play" type="button">Play</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Vault Keys -->
+    <article class="nexus-game-card">
+      <div class="nexus-game-artwork game-art-vault-keys">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">vpn_key</span>
+        </div>
+        <span class="nexus-game-category">Collection</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Vault Keys™</h3>
+        <p class="nexus-game-desc">Collection and unlock experience where players discover keys, artifacts, and realm access items across dimensions.</p>
+        <div class="nexus-game-footer">
+          <div class="nexus-game-progress">
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:15%"></div></div>
+            <span class="nexus-game-progress-label">15% XP</span>
+          </div>
+          <button class="nexus-game-play" type="button">Play</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  navToggle.addEventListener('click', function() {
+    navLinks.classList.toggle('open');
+    const icon = navToggle.querySelector('.material-symbols-outlined');
+    icon.textContent = navLinks.classList.contains('open') ? 'close' : 'menu';
+  });
+})();
+</script>
+</body>
+</html>
