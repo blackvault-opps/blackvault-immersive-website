@@ -111,7 +111,7 @@ button { font: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .entry-card {
@@ -122,10 +122,12 @@ button { font: inherit; cursor: pointer; }
   padding: 24px 18px 30px;
   border: 1px solid rgba(111,25,255,.08);
   border-radius: 34px;
-  background: radial-gradient(circle at 50% 44%, rgba(120,39,255,.05), transparent 34%),
-              rgba(255,255,255,.92);
+  background: rgba(255,255,255,.92);
   box-shadow: 0 22px 60px rgba(70,18,140,.12);
   overflow: visible;
+  height: auto;
+  min-height: 0;
+  max-height: none;
 }
 
 /* === SLOGAN === */
@@ -148,60 +150,52 @@ button { font: inherit; cursor: pointer; }
 /* === HERO STAGE === */
 .hero-stage {
   position: relative;
+  display: block;
   width: 100%;
   max-width: 1050px;
   height: auto;
   min-height: 0;
+  max-height: none;
   overflow: visible;
   margin: 0 auto;
+  clip-path: none;
+  mask: none;
+  -webkit-mask: none;
+  transform: none;
+}
+
+.hero-stage::before,
+.hero-stage::after {
+  display: none;
 }
 
 .hero-art {
   position: relative;
   z-index: 2;
   display: block;
-  width: min(100%, 1050px);
+  width: 100%;
   height: auto;
+  min-height: 0;
   max-height: none;
   object-fit: contain;
-  object-position: center;
+  object-position: center center;
+  overflow: visible;
+  clip-path: none;
+  mask: none;
+  -webkit-mask: none;
+  transform: none;
+  opacity: 1;
   margin: 0 auto;
   pointer-events: none;
   user-select: none;
+  animation: none;
+  transition: none;
 }
 
-/* === ORB EFFECTS === */
+/* === ORB EFFECTS — disabled until image confirmed rendering fully === */
 .orb-effects {
-  --orb: clamp(140px, 22vw, 300px);
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 50%;
-  width: var(--orb);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
+  display: none;
 }
-
-.orb-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(111,25,255,.20);
-  background: transparent;
-}
-
-.orb-glow {
-  position: absolute;
-  inset: -15%;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow: 0 0 40px rgba(111,25,255,.14), 0 0 80px rgba(111,25,255,.06);
-  animation: orbBreath 3.2s ease-in-out infinite;
-}
-
-.ring-one { animation: ringExpand 4.8s ease-out infinite; }
-.ring-two { animation: ringExpand 4.8s 2.4s ease-out infinite; }
 
 /* === ENTRY ACTIONS === */
 .entry-actions {
@@ -279,9 +273,7 @@ button { font: inherit; cursor: pointer; }
   transform: translateX(-50%) translateY(-4px);
 }
 
-.hero-stage.is-connecting .orb-glow {
-  animation: connectPulse .9s ease-in-out infinite;
-}
+/* Connection state handled via JS class only */
 
 /* === AGE DIALOG === */
 .age-dialog {
