@@ -57,8 +57,8 @@ button { font: inherit; cursor: pointer; }
 
 .brand-logo {
   display: block;
-  width: min(280px, 42vw);
-  max-height: 52px;
+  width: min(200px, 38vw);
+  height: auto;
   object-fit: contain;
   object-position: left center;
 }
@@ -107,21 +107,22 @@ button { font: inherit; cursor: pointer; }
 /* === ENTRY PAGE === */
 .entry-page {
   min-height: 100svh;
-  padding: 108px 16px 28px;
-  display: grid;
-  place-items: center;
+  padding: 100px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .entry-card {
   width: min(1180px, 100%);
-  min-height: calc(100svh - 136px);
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  padding: 18px 18px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 18px 30px;
   border: 1px solid rgba(111,25,255,.08);
   border-radius: 34px;
-  background: radial-gradient(circle at 50% 44%, rgba(120,39,255,.07), transparent 34%),
+  background: radial-gradient(circle at 50% 44%, rgba(120,39,255,.05), transparent 34%),
               rgba(255,255,255,.92);
   box-shadow: 0 22px 60px rgba(70,18,140,.12);
   overflow: visible;
@@ -129,70 +130,74 @@ button { font: inherit; cursor: pointer; }
 
 /* === SLOGAN === */
 .slogan {
-  margin: 0 0 2px;
+  margin: 0 0 8px;
   text-align: center;
-  font-size: clamp(.68rem, 1.1vw, .92rem);
-  line-height: 1.7;
-  letter-spacing: .16em;
+  font-size: clamp(.72rem, 1.1vw, .88rem);
+  line-height: 1.8;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .slogan strong {
   display: block;
+  font-weight: 800;
   color: var(--purple);
 }
 
 /* === HERO STAGE === */
 .hero-stage {
   position: relative;
-  width: min(100%, 1040px);
-  display: grid;
-  place-items: center;
+  width: 100%;
+  max-width: 1050px;
+  height: auto;
+  min-height: 0;
   overflow: visible;
-  isolation: isolate;
+  margin: 0 auto;
 }
 
 .hero-art {
   position: relative;
   z-index: 2;
   display: block;
-  width: min(100%, 1040px);
+  width: min(100%, 1050px);
   height: auto;
+  max-height: none;
   object-fit: contain;
   object-position: center;
+  margin: 0 auto;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 22px 48px rgba(92,29,174,.10));
 }
 
 /* === ORB EFFECTS === */
 .orb-effects {
-  --orb: clamp(160px, 23vw, 330px);
+  --orb: clamp(140px, 22vw, 300px);
   position: absolute;
   z-index: 1;
   left: 50%;
-  top: 48%;
+  top: 50%;
   width: var(--orb);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-.orb-halo, .orb-ring {
+.orb-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
+  border: 1px solid rgba(111,25,255,.20);
+  background: transparent;
 }
 
-.orb-halo {
-  background: radial-gradient(circle, rgba(255,255,255,.88) 0 4%, rgba(206,169,255,.46) 14%, rgba(111,25,255,.16) 36%, transparent 68%);
-  box-shadow: 0 0 38px rgba(111,25,255,.30), 0 0 92px rgba(111,25,255,.16);
+.orb-glow {
+  position: absolute;
+  inset: -15%;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 40px rgba(111,25,255,.14), 0 0 80px rgba(111,25,255,.06);
   animation: orbBreath 3.2s ease-in-out infinite;
-}
-
-.orb-ring {
-  border: 1px solid rgba(111,25,255,.24);
 }
 
 .ring-one { animation: ringExpand 4.8s ease-out infinite; }
@@ -205,7 +210,7 @@ button { font: inherit; cursor: pointer; }
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 6px;
+  margin-top: 16px;
 }
 
 .enter { position: relative; }
@@ -274,7 +279,7 @@ button { font: inherit; cursor: pointer; }
   transform: translateX(-50%) translateY(-4px);
 }
 
-.hero-stage.is-connecting .orb-halo {
+.hero-stage.is-connecting .orb-glow {
   animation: connectPulse .9s ease-in-out infinite;
 }
 
@@ -387,7 +392,7 @@ body.cursor-live .cursor-aura { opacity: 1; }
     border-radius: 19px;
   }
 
-  .brand-logo { width: min(168px, 42vw); }
+  .brand-logo { width: min(150px, 36vw); }
 
   .button.small {
     min-height: 39px;
@@ -395,26 +400,26 @@ body.cursor-live .cursor-aura { opacity: 1; }
     font-size: .76rem;
   }
 
-  .entry-page { padding: 90px 10px 20px; }
+  .entry-page { padding: 84px 10px 20px; }
 
   .entry-card {
-    min-height: calc(100svh - 108px);
     padding: 16px 10px 24px;
     border-radius: 26px;
   }
 
   .slogan {
-    font-size: .60rem;
-    letter-spacing: .11em;
+    font-size: .62rem;
+    letter-spacing: .10em;
   }
 
-  .orb-effects { --orb: clamp(130px, 34vw, 220px); }
+  .hero-art { width: 100%; }
+  .orb-effects { --orb: clamp(100px, 30vw, 180px); }
   .entry-actions { width: min(94%, 560px); }
-  .button { flex: 1 1 220px; }
+  .button { flex: 1 1 200px; }
 }
 
 @media (max-width: 480px) {
-  .brand-logo { width: 122px; }
+  .brand-logo { width: 130px; }
   .account-actions { gap: 5px; }
 
   .button.small {
@@ -422,10 +427,7 @@ body.cursor-live .cursor-aura { opacity: 1; }
     font-size: .70rem;
   }
 
-  .hero-art {
-    width: 108%;
-    max-width: none;
-  }
+  .hero-art { width: 100%; }
 
   .entry-actions {
     display: grid;
@@ -481,9 +483,9 @@ body.cursor-live .cursor-aura { opacity: 1; }
         fetchpriority="high"
       />
 
-      <!-- Orb Effects -->
+      <!-- Orb Effects (transparent rings only — no filled sphere) -->
       <div class="orb-effects">
-        <div class="orb-halo"></div>
+        <div class="orb-glow"></div>
         <div class="orb-ring ring-one"></div>
         <div class="orb-ring ring-two"></div>
       </div>
