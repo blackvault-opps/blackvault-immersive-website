@@ -527,13 +527,6 @@ body.cursor-live .cursor-aura { opacity: 1; }
 
 <script>
 (function() {
-  // Auto-redirect if already verified
-  var params = new URLSearchParams(window.location.search);
-  if (!params.has('entry') && localStorage.getItem('blackvault_age_verified') === 'true') {
-    window.location.replace('/home.html');
-    return;
-  }
-
   var enterButton = document.getElementById('enterBlackVault');
   var connectionButton = document.getElementById('initiateConnection');
   var status = document.getElementById('connectionStatus');
@@ -545,7 +538,11 @@ body.cursor-live .cursor-aura { opacity: 1; }
 
   var sleep = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
 
-  // Connection sequence
+  function navigateToHomepage() {
+    window.location.href = '/home.html';
+  }
+
+  // Connection sequence — visual only, no navigation
   async function runConnection() {
     if (connectionButton.disabled) return;
     connectionButton.disabled = true;
@@ -566,21 +563,28 @@ body.cursor-live .cursor-aura { opacity: 1; }
 
   connectionButton.addEventListener('click', runConnection);
 
-  // Enter BlackVault → open age dialog
+  // Enter BlackVault — requires explicit click every time
   enterButton.addEventListener('click', function() {
+    var ageVerified = localStorage.getItem('blackvault_age_verified') === 'true';
+
+    if (ageVerified) {
+      navigateToHomepage();
+      return;
+    }
+
     if (typeof ageDialog.showModal === 'function') {
       ageDialog.showModal();
     }
   });
 
-  // Age confirm
+  // Age confirm — store verification then navigate
   ageConfirm.addEventListener('click', function() {
     localStorage.setItem('blackvault_age_verified', 'true');
     ageDialog.close('confirm');
-    window.location.href = '/home.html';
+    navigateToHomepage();
   });
 
-  // Exit
+  // Exit — close modal, stay on Entry Gate
   ageExit.addEventListener('click', function() {
     ageDialog.close('cancel');
   });
