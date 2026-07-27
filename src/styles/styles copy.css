@@ -1,0 +1,40 @@
+const enterButton=document.getElementById('enterBlackVault');
+const connectionButton=document.getElementById('initiateConnection');
+const status=document.getElementById('connectionStatus');
+const stage=document.querySelector('.hero-stage');
+const ageDialog=document.getElementById('ageDialog');
+const cursorAura=document.querySelector('.cursor-aura');
+const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+
+async function runConnection(){
+  if(connectionButton.disabled)return;
+  connectionButton.disabled=true;
+  stage.classList.add('is-connecting');
+  status.classList.add('visible');
+  for(const message of ['SIGNAL DETECTED','CONNECTION ESTABLISHED','BLACKVAULT ONLINE']){
+    status.textContent=message;
+    await sleep(1050);
+  }
+  await sleep(400);
+  status.classList.remove('visible');
+  stage.classList.remove('is-connecting');
+  connectionButton.disabled=false;
+}
+connectionButton.addEventListener('click',runConnection);
+enterButton.addEventListener('click',()=>{if(typeof ageDialog.showModal==='function')ageDialog.showModal();});
+ageDialog.addEventListener('close',()=>{
+  if(ageDialog.returnValue==='confirm'){
+    localStorage.setItem('blackvault_age_verified','true');
+    status.textContent='ACCESS VERIFIED';
+    status.classList.add('visible');
+    setTimeout(()=>status.classList.remove('visible'),1600);
+    // Bolt: replace this reference-only behavior with routing/rendering of the EXISTING approved homepage.
+  }
+});
+if(window.matchMedia('(pointer: fine)').matches){
+  let mx=-100,my=-100,ax=-100,ay=-100;
+  document.body.classList.add('cursor-live');
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  const animate=()=>{ax+=(mx-ax)*.15;ay+=(my-ay)*.15;cursorAura.style.left=`${ax}px`;cursorAura.style.top=`${ay}px`;requestAnimationFrame(animate)};
+  animate();
+}
