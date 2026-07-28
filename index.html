@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BlackVault — Beyond Games. Beyond Reality.</title>
+<title>BlackVault — Enter The Universe</title>
 <link rel="icon" type="image/png" href="/assets/blackvault-round-logo.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -128,21 +128,25 @@ button { font: inherit; cursor: pointer; }
   overflow: visible;
 }
 
-/* === SLOGAN === */
-.slogan {
-  margin: 0 0 8px;
+/* === HERO HEADING === */
+.hero-heading {
+  margin: 0 0 4px;
   text-align: center;
-  font-size: clamp(.72rem, 1.1vw, .88rem);
-  line-height: 1.8;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  font-weight: 700;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  color: var(--ink);
 }
 
-.slogan strong {
-  display: block;
-  font-weight: 800;
-  color: var(--purple);
+.powered-line {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: clamp(.68rem, 1vw, .82rem);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
 }
 
 /* === HERO STAGE === */
@@ -203,39 +207,62 @@ button { font: inherit; cursor: pointer; }
 .ring-one { animation: ringExpand 4.8s ease-out infinite; }
 .ring-two { animation: ringExpand 4.8s 2.4s ease-out infinite; }
 
-/* === ENTRY ACTIONS === */
-.entry-actions {
-  z-index: 4;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
+/* === PATH SELECTION === */
+.path-heading {
+  margin: 20px 0 12px;
+  text-align: center;
+  font-size: clamp(.68rem, 1vw, .8rem);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--purple);
 }
 
-.enter { position: relative; }
+.path-actions {
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: min(94%, 560px);
+  margin: 0 auto;
+}
 
-.enter::after {
+.path-button {
+  position: relative;
+  min-height: 58px;
+  padding: 0 20px;
+  border-radius: 16px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: .92rem;
+  letter-spacing: .01em;
+  color: #fff;
+  background: linear-gradient(135deg, #923cff, #5c0bdc);
+  box-shadow: 0 12px 28px rgba(111,25,255,.22), 0 0 28px rgba(111,25,255,.08);
+  transition: .18s ease;
+}
+
+.path-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(111,25,255,.30), 0 0 36px rgba(111,25,255,.12);
+}
+
+.path-button::after {
   content: "";
   position: absolute;
   inset: -2px;
-  border: 1px solid rgba(142,71,255,.52);
+  border: 1px solid rgba(142,71,255,.42);
   border-radius: inherit;
-  animation: buttonPulse 2.6s ease-out infinite;
+  animation: buttonPulse 2.8s ease-out infinite;
   pointer-events: none;
 }
 
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 13px #fff;
-  animation: dotPulse 1.8s ease-in-out infinite;
-}
-
 .age-note {
-  margin: 15px 0 0;
+  margin: 18px 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -378,11 +405,6 @@ body.cursor-live .cursor-aura { opacity: 1; }
   78%, 100% { transform: scale(1.12); opacity: 0; }
 }
 
-@keyframes dotPulse {
-  0%, 100% { transform: scale(.82); opacity: .72; }
-  50% { transform: scale(1.25); opacity: 1; }
-}
-
 /* === RESPONSIVE === */
 @media (max-width: 760px) {
   .entry-header {
@@ -407,15 +429,10 @@ body.cursor-live .cursor-aura { opacity: 1; }
     border-radius: 26px;
   }
 
-  .slogan {
-    font-size: .62rem;
-    letter-spacing: .10em;
-  }
-
+  .hero-heading { font-size: clamp(1.5rem, 7vw, 2.2rem); }
   .hero-art { width: 100%; }
   .orb-effects { --orb: clamp(100px, 30vw, 180px); }
-  .entry-actions { width: min(94%, 560px); }
-  .button { flex: 1 1 200px; }
+  .path-actions { width: min(94%, 460px); }
 }
 
 @media (max-width: 480px) {
@@ -429,18 +446,16 @@ body.cursor-live .cursor-aura { opacity: 1; }
 
   .hero-art { width: 100%; }
 
-  .entry-actions {
-    display: grid;
+  .path-actions {
+    grid-template-columns: 1fr;
     width: 92%;
   }
 
-  .button {
-    width: 100%;
-    min-height: 50px;
+  .path-button {
+    min-height: 52px;
   }
 
   .age-note { font-size: .68rem; }
-
   .age-card { padding: 26px 21px; }
 }
 
@@ -468,11 +483,9 @@ body.cursor-live .cursor-aura { opacity: 1; }
 <main class="entry-page">
   <div class="entry-card">
 
-    <!-- Slogan -->
-    <p class="slogan">
-      Beyond Games. Beyond Reality.<br/>
-      <strong>This is BlackVault.</strong>
-    </p>
+    <!-- Hero Heading -->
+    <h1 class="hero-heading">ENTER BLACKVAULT</h1>
+    <p class="powered-line">Powered By Intelligent Design™</p>
 
     <!-- Hero Stage -->
     <div class="hero-stage" id="heroStage">
@@ -483,7 +496,7 @@ body.cursor-live .cursor-aura { opacity: 1; }
         fetchpriority="high"
       />
 
-      <!-- Orb Effects (transparent rings only — no filled sphere) -->
+      <!-- Orb Effects (transparent rings only) -->
       <div class="orb-effects">
         <div class="orb-glow"></div>
         <div class="orb-ring ring-one"></div>
@@ -494,15 +507,11 @@ body.cursor-live .cursor-aura { opacity: 1; }
       <div class="connection-status" id="connectionStatus"></div>
     </div>
 
-    <!-- Entry Actions -->
-    <div class="entry-actions">
-      <button class="button purple enter" type="button" id="enterBlackVault">
-        <span class="pulse-dot"></span>
-        Enter BlackVault
-      </button>
-      <button class="button glass" type="button" id="initiateConnection">
-        Initiate Connection
-      </button>
+    <!-- Path Selection -->
+    <p class="path-heading">Choose Your Path</p>
+    <div class="path-actions">
+      <button class="path-button" type="button" id="pathNexus">Nexus Gaming</button>
+      <button class="path-button" type="button" id="pathIOE">iOE™ Systems</button>
     </div>
 
     <p class="age-note"><span>18+</span> Age-restricted entertainment</p>
@@ -518,7 +527,7 @@ body.cursor-live .cursor-aura { opacity: 1; }
     <h1>Verify Your Age</h1>
     <p>BlackVault includes entertainment experiences intended for adult members. Please confirm that you are 18 years of age or older to continue.</p>
     <div class="modal-actions">
-      <button class="button purple" type="button" id="ageConfirm" value="confirm">I Am 18+ — Enter BlackVault</button>
+      <button class="button purple" type="button" id="ageConfirm" value="confirm">I Am 18+ — Enter</button>
       <button class="button glass" type="button" id="ageExit">Exit</button>
     </div>
   </div>
@@ -529,8 +538,8 @@ body.cursor-live .cursor-aura { opacity: 1; }
 
 <script>
 (function() {
-  var enterButton = document.getElementById('enterBlackVault');
-  var connectionButton = document.getElementById('initiateConnection');
+  var pathNexus = document.getElementById('pathNexus');
+  var pathIOE = document.getElementById('pathIOE');
   var status = document.getElementById('connectionStatus');
   var stage = document.getElementById('heroStage');
   var ageDialog = document.getElementById('ageDialog');
@@ -538,57 +547,58 @@ body.cursor-live .cursor-aura { opacity: 1; }
   var ageExit = document.getElementById('ageExit');
   var cursorAura = document.querySelector('.cursor-aura');
 
+  var pendingDestination = null;
   var sleep = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
 
-  function navigateToHomepage() {
-    window.location.href = '/home.html';
-  }
-
-  // Connection sequence — visual only, no navigation
-  async function runConnection() {
-    if (connectionButton.disabled) return;
-    connectionButton.disabled = true;
-    stage.classList.add('is-connecting');
-    status.classList.add('visible');
-
-    var messages = ['SIGNAL DETECTED', 'CONNECTION ESTABLISHED', 'BLACKVAULT ONLINE'];
-    for (var i = 0; i < messages.length; i++) {
-      status.textContent = messages[i];
-      await sleep(1050);
-    }
-
-    await sleep(400);
-    status.classList.remove('visible');
-    stage.classList.remove('is-connecting');
-    connectionButton.disabled = false;
-  }
-
-  connectionButton.addEventListener('click', runConnection);
-
-  // Enter BlackVault — requires explicit click every time
-  enterButton.addEventListener('click', function() {
+  function checkAgeAndNavigate(destination) {
     var ageVerified = localStorage.getItem('blackvault_age_verified') === 'true';
-
     if (ageVerified) {
-      navigateToHomepage();
+      runConnectionSequence(destination);
       return;
     }
-
+    pendingDestination = destination;
     if (typeof ageDialog.showModal === 'function') {
       ageDialog.showModal();
     }
+  }
+
+  async function runConnectionSequence(destination) {
+    stage.classList.add('is-connecting');
+    status.classList.add('visible');
+
+    var messages = ['SIGNAL DETECTED', 'INITIATING CONNECTION', 'BLACKVAULT ONLINE'];
+    for (var i = 0; i < messages.length; i++) {
+      status.textContent = messages[i];
+      await sleep(900);
+    }
+
+    await sleep(400);
+    if (destination === 'nexus') {
+      window.location.href = '/nexus.html';
+    } else {
+      window.location.href = '/home.html';
+    }
+  }
+
+  pathNexus.addEventListener('click', function() {
+    checkAgeAndNavigate('nexus');
   });
 
-  // Age confirm — store verification then navigate
+  pathIOE.addEventListener('click', function() {
+    checkAgeAndNavigate('ioe');
+  });
+
   ageConfirm.addEventListener('click', function() {
     localStorage.setItem('blackvault_age_verified', 'true');
     ageDialog.close('confirm');
-    navigateToHomepage();
+    if (pendingDestination) {
+      runConnectionSequence(pendingDestination);
+    }
   });
 
-  // Exit — close modal, stay on Entry Gate
   ageExit.addEventListener('click', function() {
     ageDialog.close('cancel');
+    pendingDestination = null;
   });
 
   // Cursor aura (pointer devices only)
