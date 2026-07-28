@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vault Keys™ — BlackVault Nexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../src/styles/nexus-games.css">
+  <style>
+    /* ========== Vault Keys Game Styles ========== */
+
+    .vk-scans-indicator {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--nx-purple-light, #b06cff);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .vk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .vk-node {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--nx-surface, #1a1a2e);
+      border: 2px solid var(--nx-border, #2a2a4a);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .vk-node::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(176, 108, 255, 0.05) 0%, transparent 60%);
+      animation: vk-shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes vk-shimmer {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .vk-node:hover:not(.vk-node--revealed):not(.vk-node--disabled) {
+      border-color: var(--nx-purple, #7c3aed);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+      transform: scale(1.05);
+    }
+
+    .vk-node--disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    .vk-node--revealed {
+      cursor: default;
+      animation: vk-reveal 0.5s ease forwards;
+      border-radius: 16px;
+    }
+
+    .vk-node--revealed::before {
+      display: none;
+    }
+
+    @keyframes vk-reveal {
+      0% { transform: rotateY(90deg) scale(0.8); opacity: 0; }
+      50% { transform: rotateY(0deg) scale(1.05); opacity: 1; }
+      100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+    }
+
+    .vk-node__label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      z-index: 1;
+    }
+
+    .vk-node__scan-icon {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 4px;
+      opacity: 0.5;
+      z-index: 1;
+    }
+
+    .vk-node__icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+      z-index: 1;
+    }
+
+    .vk-node__name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0 4px;
+      z-index: 1;
+    }
+
+    .vk-node__xp {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.55rem;
+      color: var(--nx-green, #4ade80);
+      margin-top: 2px;
+      z-index: 1;
+    }
+
+    /* Rarity colors */
+    .vk-rarity--common .vk-node__name { color: #e0e0e0; }
+    .vk-rarity--uncommon .vk-node__name { color: var(--nx-green, #4ade80); }
+    .vk-rarity--rare .vk-node__name { color: var(--nx-purple-light, #b06cff); }
+    .vk-rarity--legendary .vk-node__name {
+      color: var(--nx-gold, #f5c542);
+      text-shadow: 0 0 10px rgba(245, 197, 66, 0.6), 0 0 20px rgba(245, 197, 66, 0.3);
+    }
+
+    .vk-rarity--legendary {
+      border-color: var(--nx-gold, #f5c542) !important;
+      box-shadow: 0 0 25px rgba(245, 197, 66, 0.4), inset 0 0 15px rgba(245, 197, 66, 0.1) !important;
+    }
+
+    .vk-rarity--rare {
+      border-color: var(--nx-purple-light, #b06cff) !important;
+      box-shadow: 0 0 15px rgba(176, 108, 255, 0.3) !important;
+    }
+
+    .vk-rarity--uncommon {
+      border-color: var(--nx-green, #4ade80) !important;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.2) !important;
+    }
+
+    /* Round Complete Overlay */
+    .vk-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .vk-overlay--active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .vk-overlay__panel {
+      background: var(--nx-surface, #1a1a2e);
+      border: 1px solid var(--nx-border, #2a2a4a);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .vk-overlay--active .vk-overlay__panel {
+      transform: scale(1);
+    }
+
+    .vk-overlay__title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--nx-purple-light, #b06cff);
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    .vk-overlay__summary {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.5rem 0;
+    }
+
+    .vk-overlay__summary li {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #ccc;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .vk-overlay__summary li:last-child {
+      border-bottom: none;
+    }
+
+    .vk-overlay__xp-total {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--nx-green, #4ade80);
+      margin-bottom: 1.5rem;
+    }
+
+    .vk-btn {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--nx-purple, #7c3aed), var(--nx-purple-light, #b06cff));
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .vk-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    /* Help Modal */
+    .vk-help-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .vk-help-overlay--active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .vk-help-panel {
+      background: var(--nx-surface, #1a1a2e);
+      border: 1px solid var(--nx-border, #2a2a4a);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .vk-help-panel h2 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+      margin: 0 0 1rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .vk-help-panel p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: #aaa;
+      line-height: 1.6;
+      margin: 0 0 0.8rem 0;
+    }
+
+    .vk-help-panel .vk-help-close {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    /* Stats bar */
+    .vk-stats {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .vk-stat {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .vk-stat span {
+      color: #fff;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <div class="nx-shell">
+    <header class="nx-header">
+      <div class="nx-header-left">
+        <a class="nx-brand" href="/nexus.html">BLACKVAULT NEXUS™</a>
+        <div class="nx-level-badge">LVL <span id="levelNum">1</span></div>
+      </div>
+      <div class="nx-header-right">
+        <button class="nx-icon-btn" id="helpBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </button>
+        <a class="nx-icon-btn" href="/nexus.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="nx-xp-bar">
+      <span class="nx-xp-label">NEXUS XP</span>
+      <div class="nx-xp-track"><div class="nx-xp-fill" id="xpFill"></div></div>
+      <span class="nx-xp-amount" id="xpAmount">0 XP</span>
+    </div>
+
+    <div class="nx-title-bar">
+      <h1 class="nx-game-title">Vault <span>Keys™</span></h1>
+      <div class="nx-game-status">ONLINE</div>
+    </div>
+
+    <div class="nx-stage">
+      <div class="vk-scans-indicator">SCANS: <span id="scansRemaining">3</span>/3</div>
+      <div class="vk-grid" id="vkGrid"></div>
+      <div class="vk-stats">
+        <div class="vk-stat">🔑 Keys: <span id="statKeys">0</span></div>
+        <div class="vk-stat">🌀 Realm: <span id="statRealm">0</span></div>
+        <div class="vk-stat">📶 Signal: <span id="statSignal">0</span></div>
+        <div class="vk-stat">👑 Artifacts: <span id="statArtifacts">0</span></div>
+      </div>
+    </div>
+
+    <div class="nx-mission">
+      <div class="nx-mission-label">MISSION</div>
+      <div class="nx-mission-text">Discover 5 Vault Keys</div>
+      <div class="nx-mission-progress" id="missionProgress">0 / 5</div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="nx-notify" id="notify">
+    <div class="nx-notify-title"></div>
+    <div class="nx-notify-body"></div>
+  </div>
+
+  <!-- Round Complete Overlay -->
+  <div class="vk-overlay" id="roundOverlay">
+    <div class="vk-overlay__panel">
+      <div class="vk-overlay__title">ROUND COMPLETE</div>
+      <ul class="vk-overlay__summary" id="roundSummary"></ul>
+      <div class="vk-overlay__xp-total" id="roundXP">+0 XP</div>
+      <button class="vk-btn" id="newRoundBtn">BEGIN NEW SCAN</button>
+    </div>
+  </div>
+
+  <!-- Help Overlay -->
+  <div class="vk-help-overlay" id="helpOverlay">
+    <div class="vk-help-panel">
+      <h2>How to Play</h2>
+      <p><strong>Vault Keys™</strong> is a discovery game. Each round presents a 3×3 grid of concealed nodes.</p>
+      <p>You get <strong>3 scans</strong> per round. Click any concealed node to reveal what's hidden inside.</p>
+      <p><strong>Possible discoveries:</strong></p>
+      <p>🔑 <strong>Vault Key</strong> (Rare) — +50 XP<br>
+         🌀 <strong>Realm Fragment</strong> (Uncommon) — +35 XP<br>
+         📶 <strong>Signal Fragment</strong> (Common) — +20 XP<br>
+         ⚡ <strong>Nexus XP Bonus</strong> (Common) — +30 XP<br>
+         ○ <strong>Empty Signal</strong> (Common) — +5 XP<br>
+         👑 <strong>Rare Artifact</strong> (Legendary) — +100 XP</p>
+      <p>Complete the mission by discovering 5 Vault Keys across multiple rounds for a massive XP bonus!</p>
+      <button class="vk-btn vk-help-close" id="helpCloseBtn">GOT IT</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getState, addXP, unlockAchievement, addCollectible, advanceMission, updateGameStat, getXPInfo } from '../../src/scripts/nexus-state.js';
+
+    // ============ Game State ============
+    let scansRemaining = 3;
+    let roundDiscoveries = [];
+    let roundXPTotal = 0;
+    let grid = [];
+
+    // ============ Node Types ============
+    const NODE_TYPES = [
+      { id: 'vaultKey', name: 'Vault Key', icon: '🔑', rarity: 'rare', xp: 50, collectible: 'vaultKeys' },
+      { id: 'realmFragment', name: 'Realm Fragment', icon: '🌀', rarity: 'uncommon', xp: 35, collectible: 'realmFragments' },
+      { id: 'signalFragment', name: 'Signal Fragment', icon: '📶', rarity: 'common', xp: 20, collectible: 'signalFragments' },
+      { id: 'xpBonus', name: 'Nexus XP Bonus', icon: '⚡', rarity: 'common', xp: 30, collectible: null },
+      { id: 'empty', name: 'Empty Signal', icon: '○', rarity: 'common', xp: 5, collectible: null },
+      { id: 'rareArtifact', name: 'Rare Artifact', icon: '👑', rarity: 'legendary', xp: 100, collectible: 'rareArtifacts' }
+    ];
+
+    // Weighted random selection
+    function getRandomNodeType() {
+      const roll = Math.random() * 100;
+      if (roll < 5) return NODE_TYPES[5];        // Rare Artifact: 5%
+      if (roll < 17) return NODE_TYPES[0];        // Vault Key: 12%
+      if (roll < 35) return NODE_TYPES[1];        // Realm Fragment: 18%
+      if (roll < 60) return NODE_TYPES[2];        // Signal Fragment: 25%
+      if (roll < 80) return NODE_TYPES[3];        // Nexus XP Bonus: 20%
+      return NODE_TYPES[4];                        // Empty Signal: 20%
+    }
+
+    // ============ UI Elements ============
+    const gridEl = document.getElementById('vkGrid');
+    const scansEl = document.getElementById('scansRemaining');
+    const roundOverlay = document.getElementById('roundOverlay');
+    const roundSummary = document.getElementById('roundSummary');
+    const roundXPEl = document.getElementById('roundXP');
+    const newRoundBtn = document.getElementById('newRoundBtn');
+    const helpBtn = document.getElementById('helpBtn');
+    const helpOverlay = document.getElementById('helpOverlay');
+    const helpCloseBtn = document.getElementById('helpCloseBtn');
+    const notify = document.getElementById('notify');
+    const xpFill = document.getElementById('xpFill');
+    const xpAmount = document.getElementById('xpAmount');
+    const levelNum = document.getElementById('levelNum');
+    const missionProgress = document.getElementById('missionProgress');
+
+    // Stats
+    const statKeys = document.getElementById('statKeys');
+    const statRealm = document.getElementById('statRealm');
+    const statSignal = document.getElementById('statSignal');
+    const statArtifacts = document.getElementById('statArtifacts');
+
+    // ============ Notification ============
+    function showNotify(title, body, duration = 3000) {
+      const titleEl = notify.querySelector('.nx-notify-title');
+      const bodyEl = notify.querySelector('.nx-notify-body');
+      titleEl.textContent = title;
+      bodyEl.textContent = body;
+      notify.classList.add('nx-notify--visible');
+      setTimeout(() => {
+        notify.classList.remove('nx-notify--visible');
+      }, duration);
+    }
+
+    // ============ Update UI from State ============
+    function updateUI() {
+      try {
+        const state = getState();
+        const xpInfo = getXPInfo();
+
+        levelNum.textContent = xpInfo.level;
+        xpAmount.textContent = `${state.xp} XP`;
+        const progress = xpInfo.xpIntoLevel / xpInfo.xpForNext * 100;
+        xpFill.style.width = `${Math.min(progress, 100)}%`;
+
+        // Update collectible stats
+        const collectibles = state.collectibles || {};
+        statKeys.textContent = collectibles.vaultKeys || 0;
+        statRealm.textContent = collectibles.realmFragments || 0;
+        statSignal.textContent = collectibles.signalFragments || 0;
+        statArtifacts.textContent = collectibles.rareArtifacts || 0;
+
+        // Update mission progress
+        const missions = state.missions || {};
+        const missionData = missions.discover5VaultKeys || { progress: 0, goal: 5 };
+        missionProgress.textContent = `${missionData.progress || 0} / ${missionData.goal || 5}`;
+      } catch (e) {
+        console.warn('State not available:', e);
+      }
+    }
+
+    // ============ Generate Grid ============
+    function generateGrid() {
+      grid = [];
+      for (let i = 0; i < 9; i++) {
+        grid.push({
+          type: getRandomNodeType(),
+          revealed: false
+        });
+      }
+    }
+
+    // ============ Render Grid ============
+    function renderGrid() {
+      gridEl.innerHTML = '';
+      grid.forEach((node, index) => {
+        const el = document.createElement('div');
+        el.className = 'vk-node';
+        if (node.revealed) {
+          el.classList.add('vk-node--revealed', `vk-rarity--${node.type.rarity}`);
+          el.innerHTML = `
+            <div class="vk-node__icon">${node.type.icon}</div>
+            <div class="vk-node__name">${node.type.name}</div>
+            <div class="vk-node__xp">+${node.type.xp} XP</div>
+          `;
+        } else {
+          if (scansRemaining <= 0) {
+            el.classList.add('vk-node--disabled');
+          }
+          el.innerHTML = `
+            <svg class="vk-node__scan-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <div class="vk-node__label">SCAN</div>
+          `;
+          if (scansRemaining > 0) {
+            el.addEventListener('click', () => scanNode(index));
+          }
+        }
+        gridEl.appendChild(el);
+      });
+    }
+
+    // ============ Scan a Node ============
+    function scanNode(index) {
+      if (scansRemaining <= 0 || grid[index].revealed) return;
+
+      grid[index].revealed = true;
+      scansRemaining--;
+      scansEl.textContent = scansRemaining;
+
+      const nodeType = grid[index].type;
+      let xpGained = nodeType.xp;
+
+      // Check for first rare artifact
+      if (nodeType.id === 'rareArtifact') {
+        try {
+          const state = getState();
+          const collectibles = state.collectibles || {};
+          if (!collectibles.rareArtifacts || collectibles.rareArtifacts === 0) {
+            xpGained = 250;
+            unlockAchievement('keymaster');
+            showNotify('🏆 ACHIEVEMENT UNLOCKED', 'KEYMASTER — First Rare Artifact discovered!', 4000);
+          }
+        } catch (e) {
+          console.warn('State check failed:', e);
+        }
+      }
+
+      // Add XP
+      try {
+        addXP(xpGained);
+      } catch (e) { console.warn('addXP failed:', e); }
+
+      // Add collectible
+      if (nodeType.collectible) {
+        try {
+          addCollectible(nodeType.collectible, 1);
+        } catch (e) { console.warn('addCollectible failed:', e); }
+      }
+
+      // Advance mission if vault key
+      if (nodeType.id === 'vaultKey') {
+        try {
+          const result = advanceMission('discover5VaultKeys');
+          if (result && result.completed) {
+            addXP(200);
+            unlockAchievement('vaultAccess1');
+            showNotify('🏆 MISSION COMPLETE', 'VAULT ACCESS I — +200 XP Bonus!', 4000);
+          }
+        } catch (e) { console.warn('advanceMission failed:', e); }
+      }
+
+      // Update game stat
+      try {
+        updateGameStat('vaultKeys', 'totalScans', 1);
+      } catch (e) { console.warn('updateGameStat failed:', e); }
+
+      // Track discovery for round summary
+      roundDiscoveries.push({ type: nodeType, xp: xpGained });
+      roundXPTotal += xpGained;
+
+      // Show notification for rare+ finds
+      if (nodeType.rarity === 'rare' || nodeType.rarity === 'legendary') {
+        if (nodeType.id !== 'rareArtifact' || !document.querySelector('.nx-notify--visible')) {
+          const rarityLabel = nodeType.rarity === 'legendary' ? '✨ LEGENDARY' : '💎 RARE';
+          showNotify(`${rarityLabel} DISCOVERY`, `${nodeType.icon} ${nodeType.name} — +${xpGained} XP`);
+        }
+      }
+
+      // Re-render
+      renderGrid();
+      updateUI();
+
+      // Check if round is complete
+      if (scansRemaining <= 0) {
+        setTimeout(showRoundComplete, 800);
+      }
+    }
+
+    // ============ Round Complete ============
+    function showRoundComplete() {
+      roundSummary.innerHTML = '';
+      roundDiscoveries.forEach(d => {
+        const li = document.createElement('li');
+        li.textContent = `${d.type.icon} ${d.type.name} — +${d.xp} XP`;
+        roundSummary.appendChild(li);
+      });
+      roundXPEl.textContent = `+${roundXPTotal} XP EARNED`;
+      roundOverlay.classList.add('vk-overlay--active');
+    }
+
+    // ============ New Round ============
+    function startNewRound() {
+      scansRemaining = 3;
+      roundDiscoveries = [];
+      roundXPTotal = 0;
+      scansEl.textContent = '3';
+      roundOverlay.classList.remove('vk-overlay--active');
+      generateGrid();
+      renderGrid();
+      updateUI();
+    }
+
+    // ============ Event Listeners ============
+    newRoundBtn.addEventListener('click', startNewRound);
+
+    helpBtn.addEventListener('click', () => {
+      helpOverlay.classList.add('vk-help-overlay--active');
+    });
+
+    helpCloseBtn.addEventListener('click', () => {
+      helpOverlay.classList.remove('vk-help-overlay--active');
+    });
+
+    helpOverlay.addEventListener('click', (e) => {
+      if (e.target === helpOverlay) {
+        helpOverlay.classList.remove('vk-help-overlay--active');
+      }
+    });
+
+    // ============ Initialize ============
+    generateGrid();
+    renderGrid();
+    updateUI();
+  </script>
+</body>
+</html>

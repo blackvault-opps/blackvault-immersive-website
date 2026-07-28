@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vault Spin™ — BlackVault Nexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../src/styles/nexus-games.css">
+  <style>
+    /* === VAULT SPIN GAME STYLES === */
+    .vs-machine {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vs-reels-container {
+      width: 100%;
+      padding: 20px 16px;
+      border-radius: var(--nx-radius);
+      border: 1px solid var(--nx-border-bright);
+      background: var(--nx-surface);
+      box-shadow: 0 0 30px var(--nx-purple-glow), inset 0 0 40px rgba(138, 43, 226, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vs-reels-container::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: var(--nx-radius);
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), transparent 50%, rgba(138, 43, 226, 0.2));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .vs-reels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .vs-reel {
+      height: 80px;
+      border-radius: var(--nx-radius-sm);
+      background: var(--nx-bg);
+      border: 1px solid var(--nx-border);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .vs-reel-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+    }
+
+    .vs-reel.spinning .vs-reel-inner {
+      transition: none;
+    }
+
+    .vs-symbol {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      user-select: none;
+    }
+
+    .vs-reel.winner {
+      animation: spinWin 0.5s ease;
+      border-color: var(--nx-purple-light);
+      box-shadow: 0 0 20px var(--nx-purple-glow), 0 0 40px rgba(138, 43, 226, 0.15);
+    }
+
+    .vs-win-line {
+      position: absolute;
+      top: 50%;
+      left: -4px;
+      right: -4px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--nx-purple-light), transparent);
+      transform: translateY(-50%);
+      border-radius: 2px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .vs-win-line.show {
+      opacity: 1;
+      animation: glowPulse 1.5s ease infinite;
+    }
+
+    .vs-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .vs-spin-btn {
+      width: 100%;
+      max-width: 280px;
+      min-height: 52px;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+    }
+
+    .vs-result {
+      min-height: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .vs-result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .vs-result-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--nx-text);
+    }
+
+    .vs-result-title.win {
+      color: var(--nx-gold);
+    }
+
+    .vs-result-xp {
+      font-size: 0.74rem;
+      color: var(--nx-purple-light);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .vs-result-extra {
+      font-size: 0.68rem;
+      color: var(--nx-text-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* Help Modal */
+    .vs-help-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .vs-help-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .vs-help-panel {
+      width: 100%;
+      max-width: 360px;
+      max-height: 80vh;
+      overflow-y: auto;
+      border-radius: var(--nx-radius);
+      border: 1px solid var(--nx-border-bright);
+      background: var(--nx-surface);
+      padding: 24px 20px;
+    }
+
+    .vs-help-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      color: var(--nx-purple-light);
+    }
+
+    .vs-help-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--nx-border);
+    }
+
+    .vs-help-row:last-child {
+      border-bottom: 0;
+    }
+
+    .vs-help-emoji {
+      font-size: 24px;
+      flex-shrink: 0;
+      width: 36px;
+      text-align: center;
+    }
+
+    .vs-help-desc {
+      font-size: 0.74rem;
+      color: var(--nx-text-muted);
+      line-height: 1.4;
+    }
+
+    .vs-help-desc strong {
+      color: var(--nx-text);
+      font-weight: 700;
+    }
+
+    .vs-help-close {
+      margin-top: 16px;
+      width: 100%;
+    }
+
+    /* Spinning animation keyframes */
+    @keyframes reelBlur {
+      0% { filter: blur(0px); }
+      20% { filter: blur(2px); }
+      80% { filter: blur(2px); }
+      100% { filter: blur(0px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="nx-shell">
+    <!-- Header -->
+    <header class="nx-header">
+      <div class="nx-header-left">
+        <a class="nx-brand" href="/nexus.html">BLACKVAULT NEXUS™</a>
+        <div class="nx-level-badge">LVL <span id="levelNum">1</span></div>
+      </div>
+      <div class="nx-header-right">
+        <button class="nx-icon-btn" id="helpBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <a class="nx-icon-btn" href="/nexus.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- XP Bar -->
+    <div class="nx-xp-bar">
+      <span class="nx-xp-label">NEXUS XP</span>
+      <div class="nx-xp-track"><div class="nx-xp-fill" id="xpFill" style="width: 0%"></div></div>
+      <span class="nx-xp-amount" id="xpAmount">0 XP</span>
+    </div>
+
+    <!-- Title Bar -->
+    <div class="nx-title-bar">
+      <h1 class="nx-game-title">Vault <span>Spin™</span></h1>
+      <div class="nx-game-status">ONLINE</div>
+    </div>
+
+    <!-- Game Stage -->
+    <div class="nx-stage">
+      <div class="vs-machine">
+        <!-- Reels -->
+        <div class="vs-reels-container">
+          <div class="vs-reels">
+            <div class="vs-reel" id="reel0">
+              <div class="vs-reel-inner" id="reelInner0"></div>
+            </div>
+            <div class="vs-reel" id="reel1">
+              <div class="vs-reel-inner" id="reelInner1"></div>
+            </div>
+            <div class="vs-reel" id="reel2">
+              <div class="vs-reel-inner" id="reelInner2"></div>
+            </div>
+          </div>
+          <div class="vs-win-line" id="winLine"></div>
+        </div>
+
+        <!-- Result Display -->
+        <div class="vs-result" id="resultDisplay">
+          <div class="vs-result-title" id="resultTitle"></div>
+          <div class="vs-result-xp" id="resultXP"></div>
+          <div class="vs-result-extra" id="resultExtra"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="vs-controls">
+          <button class="nx-btn nx-btn-primary vs-spin-btn" id="spinBtn">SPIN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mission Tracker -->
+    <div class="nx-mission">
+      <div class="nx-mission-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      </div>
+      <div class="nx-mission-info">
+        <div class="nx-mission-name">SPIN THE NEXUS</div>
+        <div class="nx-mission-progress" id="missionProgress">0 / 10 spins</div>
+      </div>
+      <div class="nx-mission-bar">
+        <div class="nx-mission-bar-fill" id="missionBarFill" style="width: 0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="nx-notify" id="notify">
+    <div class="nx-notify-title" id="notifyTitle"></div>
+    <div class="nx-notify-body" id="notifyBody"></div>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="vs-help-overlay" id="helpOverlay">
+    <div class="vs-help-panel">
+      <div class="vs-help-title">VAULT SPIN™ — PAYOUTS</div>
+      <div class="vs-help-row"><span class="vs-help-emoji">🔮🔮🔮</span><div class="vs-help-desc"><strong>+150 XP</strong> · Unlocks "ORB SYNCHRONIZED"</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">🔑🔑🔑</span><div class="vs-help-desc"><strong>+75 XP</strong> · +1 Vault Key collectible</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">🤖🤖🤖</span><div class="vs-help-desc"><strong>+50 XP</strong> · Unlocks "VAULT CONNECTION"</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">📡📡📡</span><div class="vs-help-desc"><strong>+50 XP</strong> · Unlocks "ECHO SIGNAL"</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">📶📶📶</span><div class="vs-help-desc"><strong>+40 XP</strong> · +1 Signal Fragment</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">⚡⚡⚡</span><div class="vs-help-desc"><strong>+25 XP</strong> · Common match</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">💎💎💎</span><div class="vs-help-desc"><strong>+25 XP</strong> · Common match</div></div>
+      <div class="vs-help-row"><span class="vs-help-emoji">❌</span><div class="vs-help-desc"><strong>+5 XP</strong> · No match (participation)</div></div>
+      <button class="nx-btn nx-btn-ghost vs-help-close" id="helpCloseBtn">CLOSE</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getState, addXP, unlockAchievement, addCollectible, advanceMission, getXPInfo } from '../../src/scripts/nexus-state.js';
+
+    // === SYMBOLS CONFIG ===
+    const SYMBOLS = [
+      { id: 'orb', emoji: '🔮', name: 'BLACKVAULT ORB' },
+      { id: 'vaultAI', emoji: '🤖', name: 'VAULT AI' },
+      { id: 'echoAI', emoji: '📡', name: 'ECHO AI' },
+      { id: 'vectorAI', emoji: '⚡', name: 'VECTOR AI' },
+      { id: 'vaultKey', emoji: '🔑', name: 'VAULT KEY' },
+      { id: 'crystal', emoji: '💎', name: 'REALM CRYSTAL' },
+      { id: 'signal', emoji: '📶', name: 'SIGNAL FRAGMENT' },
+    ];
+
+    const REEL_SYMBOL_COUNT = 20; // total symbols in each reel strip
+    const SPIN_DURATION = 1800;
+    const STAGGER_DELAY = 300;
+
+    // === DOM REFS ===
+    const spinBtn = document.getElementById('spinBtn');
+    const resultDisplay = document.getElementById('resultDisplay');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultXP = document.getElementById('resultXP');
+    const resultExtra = document.getElementById('resultExtra');
+    const winLine = document.getElementById('winLine');
+    const notify = document.getElementById('notify');
+    const notifyTitle = document.getElementById('notifyTitle');
+    const notifyBody = document.getElementById('notifyBody');
+    const levelNum = document.getElementById('levelNum');
+    const xpFill = document.getElementById('xpFill');
+    const xpAmount = document.getElementById('xpAmount');
+    const missionProgress = document.getElementById('missionProgress');
+    const missionBarFill = document.getElementById('missionBarFill');
+    const helpBtn = document.getElementById('helpBtn');
+    const helpOverlay = document.getElementById('helpOverlay');
+    const helpCloseBtn = document.getElementById('helpCloseBtn');
+
+    let isSpinning = false;
+    let reelResults = [0, 0, 0];
+
+    // === INITIALIZE REELS ===
+    function buildReelStrip(reelInner) {
+      reelInner.innerHTML = '';
+      for (let i = 0; i < REEL_SYMBOL_COUNT; i++) {
+        const sym = SYMBOLS[i % SYMBOLS.length];
+        const div = document.createElement('div');
+        div.className = 'vs-symbol';
+        div.textContent = sym.emoji;
+        div.dataset.symbolId = sym.id;
+        reelInner.appendChild(div);
+      }
+    }
+
+    function initReels() {
+      for (let i = 0; i < 3; i++) {
+        const inner = document.getElementById(`reelInner${i}`);
+        buildReelStrip(inner);
+        // Set initial position to a random symbol
+        const startIdx = Math.floor(Math.random() * SYMBOLS.length);
+        inner.style.transform = `translateY(-${startIdx * 80}px)`;
+        reelResults[i] = startIdx;
+      }
+    }
+
+    // === SPIN LOGIC ===
+    function getRandomSymbolIndex() {
+      return Math.floor(Math.random() * SYMBOLS.length);
+    }
+
+    function spin() {
+      if (isSpinning) return;
+      isSpinning = true;
+      spinBtn.disabled = true;
+
+      // Hide previous result
+      resultDisplay.classList.remove('show');
+      winLine.classList.remove('show');
+      document.querySelectorAll('.vs-reel').forEach(r => r.classList.remove('winner'));
+
+      // Determine final symbols for each reel
+      const finalIndices = [getRandomSymbolIndex(), getRandomSymbolIndex(), getRandomSymbolIndex()];
+
+      // Animate each reel with stagger
+      for (let i = 0; i < 3; i++) {
+        const reel = document.getElementById(`reel${i}`);
+        const inner = document.getElementById(`reelInner${i}`);
+
+        reel.classList.add('spinning');
+
+        // Fast spin animation using interval
+        let spinCount = 0;
+        const maxSpins = 8 + i * 4; // more spins for later reels
+        const interval = setInterval(() => {
+          const randomIdx = Math.floor(Math.random() * SYMBOLS.length);
+          inner.style.transform = `translateY(-${randomIdx * 80}px)`;
+          spinCount++;
+          if (spinCount >= maxSpins) {
+            clearInterval(interval);
+            // Final stop
+            reel.classList.remove('spinning');
+            inner.style.transform = `translateY(-${finalIndices[i] * 80}px)`;
+            reelResults[i] = finalIndices[i];
+
+            // If last reel, evaluate results
+            if (i === 2) {
+              setTimeout(() => evaluateResult(finalIndices), 200);
+            }
+          }
+        }, 80);
+      }
+    }
+
+    function evaluateResult(indices) {
+      const symbols = indices.map(idx => SYMBOLS[idx]);
+      const allMatch = symbols[0].id === symbols[1].id && symbols[1].id === symbols[2].id;
+
+      let xpReward = 5;
+      let title = 'NO MATCH';
+      let extra = '';
+      let isWin = false;
+
+      if (allMatch) {
+        isWin = true;
+        const sym = symbols[0];
+
+        switch (sym.id) {
+          case 'orb':
+            xpReward = 150;
+            title = '🔮 ORB SYNCHRONIZED!';
+            extra = 'Achievement Unlocked!';
+            unlockAchievementWithNotify('orbSynchronized', 'ORB SYNCHRONIZED');
+            break;
+          case 'vaultAI':
+            xpReward = 50;
+            title = '🤖 VAULT CONNECTION!';
+            extra = 'Achievement Unlocked!';
+            unlockAchievementWithNotify('vaultConnection', 'VAULT CONNECTION');
+            break;
+          case 'echoAI':
+            xpReward = 50;
+            title = '📡 ECHO SIGNAL!';
+            extra = 'Achievement Unlocked!';
+            unlockAchievementWithNotify('echoSignal', 'ECHO SIGNAL');
+            break;
+          case 'vaultKey':
+            xpReward = 75;
+            title = '🔑 VAULT KEY JACKPOT!';
+            extra = '+1 Vault Key';
+            addCollectible('vaultKeys', 1);
+            break;
+          case 'signal':
+            xpReward = 40;
+            title = '📶 SIGNAL SURGE!';
+            extra = '+1 Signal Fragment';
+            addCollectible('signalFragments', 1);
+            break;
+          case 'vectorAI':
+            xpReward = 25;
+            title = '⚡ VECTOR MATCH!';
+            break;
+          case 'crystal':
+            xpReward = 25;
+            title = '💎 CRYSTAL MATCH!';
+            break;
+        }
+      }
+
+      // Award XP
+      addXP(xpReward);
+
+      // Advance mission
+      const missionResult = advanceMission('spinTheNexus');
+      if (missionResult.justCompleted) {
+        addXP(100);
+        setTimeout(() => showNotify('MISSION COMPLETE', '+100 Nexus XP', true), 1500);
+      }
+
+      // Show result
+      resultTitle.textContent = title;
+      resultTitle.className = `vs-result-title${isWin ? ' win' : ''}`;
+      resultXP.textContent = `+${xpReward} XP`;
+      resultExtra.textContent = extra;
+      resultDisplay.classList.add('show');
+
+      // Win effects
+      if (isWin) {
+        winLine.classList.add('show');
+        document.querySelectorAll('.vs-reel').forEach(r => r.classList.add('winner'));
+      }
+
+      // Update UI
+      updateUI();
+
+      // Re-enable spin
+      isSpinning = false;
+      spinBtn.disabled = false;
+    }
+
+    // === ACHIEVEMENT HELPER ===
+    function unlockAchievementWithNotify(id, title) {
+      const result = unlockAchievement(id, title);
+      if (result.isNew) {
+        setTimeout(() => showNotify('🏆 ACHIEVEMENT', title, true), 800);
+      }
+    }
+
+    // === NOTIFICATIONS ===
+    function showNotify(title, body, isGold = false) {
+      notifyTitle.textContent = title;
+      notifyBody.textContent = body;
+      notify.className = `nx-notify show${isGold ? ' gold' : ''}`;
+      setTimeout(() => {
+        notify.classList.remove('show');
+      }, 3000);
+    }
+
+    // === UI UPDATE ===
+    function updateUI() {
+      const state = getState();
+      const xpInfo = getXPInfo(state);
+
+      levelNum.textContent = state.level;
+      xpFill.style.width = `${xpInfo.percent}%`;
+      xpAmount.textContent = `${state.xp} XP`;
+
+      // Mission
+      const mission = state.missions.spinTheNexus;
+      if (mission.completed) {
+        missionProgress.textContent = 'COMPLETE ✓';
+        missionBarFill.style.width = '100%';
+      } else {
+        missionProgress.textContent = `${mission.progress} / ${mission.target} spins`;
+        missionBarFill.style.width = `${(mission.progress / mission.target) * 100}%`;
+      }
+    }
+
+    // === HELP MODAL ===
+    helpBtn.addEventListener('click', () => helpOverlay.classList.add('show'));
+    helpCloseBtn.addEventListener('click', () => helpOverlay.classList.remove('show'));
+    helpOverlay.addEventListener('click', (e) => {
+      if (e.target === helpOverlay) helpOverlay.classList.remove('show');
+    });
+
+    // === INIT ===
+    spinBtn.addEventListener('click', spin);
+    initReels();
+    updateUI();
+  </script>
+</body>
+</html>

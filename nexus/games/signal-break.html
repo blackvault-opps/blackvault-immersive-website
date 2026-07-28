@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Break™ | BlackVault Nexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../src/styles/nexus-games.css" />
+  <style>
+    /* === SIGNAL BREAK GAME STYLES === */
+
+    .sb-scanner-wrap {
+      width: 100%;
+      max-width: 500px;
+      margin: 24px auto;
+      position: relative;
+    }
+
+    .sb-scanner {
+      width: 100%;
+      height: 60px;
+      background: var(--nx-surface);
+      border: 1px solid var(--nx-border);
+      border-radius: var(--nx-radius-sm);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .sb-scanner-bg {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 9.9%,
+        rgba(138, 43, 226, 0.05) 10%,
+        rgba(138, 43, 226, 0.05) 10.1%
+      );
+    }
+
+    .sb-sync-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22%;
+      background: rgba(138, 43, 226, 0.12);
+      border-left: 2px solid rgba(138, 43, 226, 0.5);
+      border-right: 2px solid rgba(138, 43, 226, 0.5);
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.15), inset 0 0 20px rgba(138, 43, 226, 0.08);
+      transition: width 0.3s ease;
+    }
+
+    .sb-sync-zone::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      background: rgba(138, 43, 226, 0.25);
+    }
+
+    .sb-signal {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 44px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--nx-purple-light), var(--nx-purple));
+      box-shadow: 0 0 12px var(--nx-purple-light), 0 0 24px var(--nx-purple-glow), 0 0 4px #fff;
+      transition: box-shadow 0.1s;
+    }
+
+    .sb-signal.hit-perfect {
+      box-shadow: 0 0 20px var(--nx-gold), 0 0 40px rgba(245, 197, 66, 0.4), 0 0 6px #fff;
+      background: linear-gradient(180deg, var(--nx-gold), #d4a017);
+    }
+
+    .sb-signal.hit-strong {
+      box-shadow: 0 0 20px var(--nx-green), 0 0 40px rgba(74, 222, 128, 0.3), 0 0 6px #fff;
+      background: linear-gradient(180deg, var(--nx-green), #22c55e);
+    }
+
+    .sb-signal.hit-weak {
+      box-shadow: 0 0 14px var(--nx-purple-light), 0 0 28px var(--nx-purple-glow);
+    }
+
+    .sb-signal.hit-miss {
+      box-shadow: 0 0 12px var(--nx-red), 0 0 24px rgba(248, 113, 113, 0.3);
+      background: linear-gradient(180deg, var(--nx-red), #dc2626);
+    }
+
+    /* Score popup */
+    .sb-score-popup {
+      position: absolute;
+      top: -36px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      animation: scorePopUp 1.2s ease forwards;
+    }
+
+    .sb-score-popup.perfect { color: var(--nx-gold); }
+    .sb-score-popup.strong { color: var(--nx-green); }
+    .sb-score-popup.weak { color: var(--nx-purple-light); }
+    .sb-score-popup.miss { color: var(--nx-red); }
+
+    @keyframes scorePopUp {
+      0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      70% { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+    }
+
+    /* Streak & Stats */
+    .sb-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin: 16px 0;
+    }
+
+    .sb-stat {
+      text-align: center;
+    }
+
+    .sb-stat-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--nx-purple-light);
+    }
+
+    .sb-stat-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--nx-text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .sb-multiplier {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--nx-gold);
+    }
+
+    /* Anomaly banner */
+    .sb-anomaly {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: var(--nx-surface-2);
+      border: 1px solid var(--nx-border-bright);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--nx-purple-light);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .sb-anomaly.show {
+      opacity: 1;
+      animation: anomalyFlash 2.5s ease forwards;
+    }
+
+    .sb-anomaly.surge { color: var(--nx-red); border-color: rgba(248, 113, 113, 0.4); }
+    .sb-anomaly.echo { color: var(--nx-green); border-color: rgba(74, 222, 128, 0.4); }
+    .sb-anomaly.vault { color: var(--nx-gold); border-color: rgba(245, 197, 66, 0.4); }
+    .sb-anomaly.distortion { color: var(--nx-red); border-color: rgba(248, 113, 113, 0.4); }
+
+    @keyframes anomalyFlash {
+      0% { opacity: 0; transform: translateX(-50%) scale(0.9); }
+      10% { opacity: 1; transform: translateX(-50%) scale(1); }
+      80% { opacity: 1; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0; transform: translateX(-50%) scale(0.95); }
+    }
+
+    /* Action button */
+    .sb-action {
+      margin-top: 20px;
+    }
+
+    /* Help modal */
+    .sb-help-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .sb-help-overlay.show {
+      display: flex;
+    }
+
+    .sb-help-panel {
+      width: 100%;
+      max-width: 400px;
+      border-radius: var(--nx-radius);
+      border: 1px solid var(--nx-border-bright);
+      background: var(--nx-surface-2);
+      padding: 24px;
+    }
+
+    .sb-help-panel h2 {
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--nx-purple-light);
+    }
+
+    .sb-help-panel p {
+      font-size: 0.76rem;
+      color: var(--nx-text-muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .sb-help-panel .close-help {
+      margin-top: 16px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="nx-shell">
+    <header class="nx-header">
+      <div class="nx-header-left">
+        <a class="nx-brand" href="/nexus.html">BLACKVAULT NEXUS™</a>
+        <div class="nx-level-badge">LVL <span id="levelNum">1</span></div>
+      </div>
+      <div class="nx-header-right">
+        <button class="nx-icon-btn" id="helpBtn">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+        </button>
+        <a class="nx-icon-btn" href="/nexus.html">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="nx-xp-bar">
+      <span class="nx-xp-label">NEXUS XP</span>
+      <div class="nx-xp-track"><div class="nx-xp-fill" id="xpFill"></div></div>
+      <span class="nx-xp-amount" id="xpAmount">0 XP</span>
+    </div>
+
+    <div class="nx-title-bar">
+      <h1 class="nx-game-title">Signal <span>Break™</span></h1>
+      <div class="nx-game-status">ONLINE</div>
+    </div>
+
+    <div class="nx-stage">
+      <div class="sb-anomaly" id="anomalyBanner"></div>
+
+      <div class="sb-stats">
+        <div class="sb-stat">
+          <div class="sb-stat-value" id="streakValue">0</div>
+          <div class="sb-stat-label">STREAK</div>
+        </div>
+        <div class="sb-stat">
+          <div class="sb-multiplier" id="multiplierValue">x1</div>
+          <div class="sb-stat-label">MULTIPLIER</div>
+        </div>
+        <div class="sb-stat">
+          <div class="sb-stat-value" id="totalBreaksValue">0</div>
+          <div class="sb-stat-label">BREAKS</div>
+        </div>
+      </div>
+
+      <div class="sb-scanner-wrap">
+        <div class="sb-scanner">
+          <div class="sb-scanner-bg"></div>
+          <div class="sb-sync-zone" id="syncZone"></div>
+          <div class="sb-signal" id="signal"></div>
+        </div>
+        <div class="sb-score-popup" id="scorePopup"></div>
+      </div>
+
+      <div class="nx-result" id="resultDisplay">
+        <div class="nx-result-title" id="resultTitle">Tap BREAK when the signal enters the zone</div>
+        <div class="nx-result-xp" id="resultXP"></div>
+      </div>
+
+      <div class="sb-action">
+        <button class="nx-btn nx-btn-primary" id="breakBtn">⚡ BREAK SIGNAL</button>
+      </div>
+    </div>
+
+    <div class="nx-mission" id="missionTracker">
+      <div class="nx-mission-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="nx-mission-info">
+        <div class="nx-mission-name">BREAK 15 SIGNALS</div>
+        <div class="nx-mission-progress" id="missionProgress">0 / 15</div>
+      </div>
+      <div class="nx-mission-bar">
+        <div class="nx-mission-bar-fill" id="missionBarFill" style="width: 0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="nx-notify" id="notify">
+    <div class="nx-notify-title"></div>
+    <div class="nx-notify-body"></div>
+  </div>
+
+  <!-- Help Overlay -->
+  <div class="sb-help-overlay" id="helpOverlay">
+    <div class="sb-help-panel">
+      <h2>HOW TO PLAY — SIGNAL BREAK™</h2>
+      <p>A signal indicator sweeps across the scanner bar. Press <strong>BREAK SIGNAL</strong> when the signal is inside the purple synchronization zone.</p>
+      <p><strong>PERFECT</strong> — center of zone → +75 XP<br><strong>STRONG</strong> — middle zone → +40 XP<br><strong>WEAK</strong> — outer zone → +15 XP<br><strong>MISS</strong> — outside zone → +0 XP</p>
+      <p>Consecutive hits build your <strong>streak multiplier</strong> (up to x3). Random <strong>anomaly events</strong> change signal speed or zone width.</p>
+      <p><strong>Mission:</strong> Break 15 signals to unlock the "SIGNAL ANALYST" achievement.</p>
+      <button class="nx-btn nx-btn-ghost close-help" id="closeHelp">GOT IT</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getState, addXP, unlockAchievement, advanceMission, updateGameStat, getXPInfo } from '../../src/scripts/nexus-state.js';
+
+    // === DOM REFS ===
+    const levelNum = document.getElementById('levelNum');
+    const xpFill = document.getElementById('xpFill');
+    const xpAmount = document.getElementById('xpAmount');
+    const signal = document.getElementById('signal');
+    const syncZone = document.getElementById('syncZone');
+    const breakBtn = document.getElementById('breakBtn');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultXP = document.getElementById('resultXP');
+    const scorePopup = document.getElementById('scorePopup');
+    const streakValue = document.getElementById('streakValue');
+    const multiplierValue = document.getElementById('multiplierValue');
+    const totalBreaksValue = document.getElementById('totalBreaksValue');
+    const anomalyBanner = document.getElementById('anomalyBanner');
+    const missionProgress = document.getElementById('missionProgress');
+    const missionBarFill = document.getElementById('missionBarFill');
+    const notify = document.getElementById('notify');
+    const helpBtn = document.getElementById('helpBtn');
+    const helpOverlay = document.getElementById('helpOverlay');
+    const closeHelp = document.getElementById('closeHelp');
+
+    // === GAME STATE ===
+    let signalPos = 0; // 0..1
+    let signalDir = 1; // 1 = right, -1 = left
+    let baseSpeed = 0.008;
+    let currentSpeed = baseSpeed;
+    let zoneWidth = 0.22; // fraction of scanner width
+    let streak = 0;
+    let totalBreaks = 0;
+    let bestStreak = 0;
+    let perfectBreaks = 0;
+    let isRunning = true;
+    let animFrame = null;
+    let lastTime = 0;
+
+    // Anomaly state
+    let anomalySpeedMult = 1;
+    let anomalyZoneMult = 1;
+    let anomalyRewardMult = 0;
+
+    // === INIT ===
+    function init() {
+      const state = getState();
+      const stats = state.gameStats.signalBreak;
+      totalBreaks = stats.totalBreaks || 0;
+      bestStreak = stats.bestStreak || 0;
+      perfectBreaks = stats.perfectBreaks || 0;
+      totalBreaksValue.textContent = totalBreaks;
+      updateUI(state);
+      updateMission(state);
+      startSignal();
+    }
+
+    function updateUI(state) {
+      levelNum.textContent = state.level;
+      const info = getXPInfo(state);
+      xpFill.style.width = info.percent + '%';
+      xpAmount.textContent = state.xp + ' XP';
+    }
+
+    function updateMission(state) {
+      const mission = state.missions.break15Signals;
+      const prog = mission.progress;
+      const target = mission.target;
+      missionProgress.textContent = `${prog} / ${target}${mission.completed ? ' ✓' : ''}`;
+      missionBarFill.style.width = Math.min((prog / target) * 100, 100) + '%';
+    }
+
+    // === SIGNAL ANIMATION ===
+    function startSignal() {
+      lastTime = performance.now();
+      isRunning = true;
+      breakBtn.disabled = false;
+      animate();
+    }
+
+    function animate(time) {
+      if (!isRunning) return;
+      if (!time) time = performance.now();
+      const dt = Math.min((time - lastTime) / 16.67, 3); // normalized to ~60fps
+      lastTime = time;
+
+      signalPos += currentSpeed * signalDir * dt;
+
+      if (signalPos >= 1) {
+        signalPos = 1;
+        signalDir = -1;
+        onCycleEnd();
+      } else if (signalPos <= 0) {
+        signalPos = 0;
+        signalDir = 1;
+        onCycleEnd();
+      }
+
+      signal.style.left = (signalPos * 100) + '%';
+      animFrame = requestAnimationFrame(animate);
+    }
+
+    function onCycleEnd() {
+      // Random chance for anomaly after bounce
+      if (Math.random() < 0.20) {
+        triggerAnomaly();
+      }
+    }
+
+    // === BREAK LOGIC ===
+    function attemptBreak() {
+      if (!isRunning) return;
+
+      // Pause briefly
+      isRunning = false;
+      breakBtn.disabled = true;
+      cancelAnimationFrame(animFrame);
+
+      const effectiveZone = zoneWidth * anomalyZoneMult;
+      const zoneStart = 0.5 - effectiveZone / 2;
+      const zoneEnd = 0.5 + effectiveZone / 2;
+      const zoneCenter = 0.5;
+      const zoneHalf = effectiveZone / 2;
+
+      // Distance from center
+      const distFromCenter = Math.abs(signalPos - zoneCenter);
+      const inZone = signalPos >= zoneStart && signalPos <= zoneEnd;
+
+      let rating, baseXP, cssClass;
+
+      if (!inZone) {
+        rating = 'MISS';
+        baseXP = 0;
+        cssClass = 'miss';
+        streak = 0;
+      } else {
+        // Inner 15% of zone
+        const innerThreshold = zoneHalf * 0.15;
+        // Middle 30% of zone
+        const middleThreshold = zoneHalf * 0.45;
+
+        if (distFromCenter <= innerThreshold) {
+          rating = 'PERFECT';
+          baseXP = 75;
+          cssClass = 'perfect';
+          perfectBreaks++;
+        } else if (distFromCenter <= middleThreshold) {
+          rating = 'STRONG';
+          baseXP = 40;
+          cssClass = 'strong';
+        } else {
+          rating = 'WEAK';
+          baseXP = 15;
+          cssClass = 'weak';
+        }
+        streak++;
+        totalBreaks++;
+        if (streak > bestStreak) bestStreak = streak;
+      }
+
+      // Calculate multiplier
+      const streakMult = getStreakMultiplier();
+      const totalMult = Math.min(streakMult + anomalyRewardMult, 3);
+      const finalXP = Math.floor(baseXP * totalMult);
+
+      // Visual feedback
+      signal.className = 'sb-signal hit-' + cssClass;
+      showScorePopup(rating, finalXP, cssClass);
+      showResult(rating, finalXP, cssClass);
+
+      // Update stats display
+      streakValue.textContent = streak;
+      multiplierValue.textContent = 'x' + totalMult.toFixed(totalMult % 1 === 0 ? 0 : 2);
+      totalBreaksValue.textContent = totalBreaks;
+
+      // State updates
+      if (finalXP > 0) {
+        const state = addXP(finalXP);
+        updateUI(state);
+      }
+
+      if (rating !== 'MISS') {
+        const { state, justCompleted } = advanceMission('break15Signals');
+        updateMission(state);
+        if (justCompleted) {
+          // Mission complete!
+          const bonusState = addXP(150);
+          updateUI(bonusState);
+          const { isNew } = unlockAchievement('signalAnalyst', 'SIGNAL ANALYST');
+          if (isNew) {
+            showNotify('🏆 ACHIEVEMENT UNLOCKED', 'SIGNAL ANALYST — Break 15 Signals', true);
+          }
+        }
+      }
+
+      // Update game stats
+      updateGameStat('signalBreak', 'totalBreaks', totalBreaks);
+      updateGameStat('signalBreak', 'perfectBreaks', perfectBreaks);
+      updateGameStat('signalBreak', 'bestStreak', bestStreak);
+
+      // Reset anomaly bonuses
+      anomalySpeedMult = 1;
+      anomalyRewardMult = 0;
+      anomalyZoneMult = 1;
+
+      // Resume after delay
+      setTimeout(() => {
+        signal.className = 'sb-signal';
+        currentSpeed = baseSpeed + (Math.random() * 0.004 - 0.002); // slight variance
+        syncZone.style.width = (zoneWidth * 100) + '%';
+        startSignal();
+      }, 800);
+    }
+
+    function getStreakMultiplier() {
+      if (streak >= 5) return 2;
+      if (streak >= 3) return 1.5;
+      if (streak >= 2) return 1.25;
+      return 1;
+    }
+
+    // === SCORE POPUP ===
+    function showScorePopup(rating, xp, cssClass) {
+      const text = xp > 0 ? `${rating} +${xp} XP` : rating;
+      scorePopup.textContent = text;
+      scorePopup.className = 'sb-score-popup ' + cssClass;
+      // Force reflow for animation restart
+      scorePopup.offsetWidth;
+      scorePopup.style.animation = 'none';
+      scorePopup.offsetWidth;
+      scorePopup.style.animation = '';
+    }
+
+    function showResult(rating, xp, cssClass) {
+      const colors = { perfect: 'var(--nx-gold)', strong: 'var(--nx-green)', weak: 'var(--nx-purple-light)', miss: 'var(--nx-red)' };
+      resultTitle.textContent = rating;
+      resultTitle.style.color = colors[cssClass];
+      resultXP.textContent = xp > 0 ? `+${xp} XP` : '';
+    }
+
+    // === ANOMALIES ===
+    const ANOMALIES = [
+      { name: 'SIGNAL SURGE', css: 'surge', effect: () => { anomalySpeedMult = 1.5; currentSpeed = baseSpeed * 1.5; } },
+      { name: 'ECHO TRACE', css: 'echo', effect: () => { anomalyZoneMult = 1.3; syncZone.style.width = (zoneWidth * 1.3 * 100) + '%'; } },
+      { name: 'VAULT FREQUENCY', css: 'vault', effect: () => { anomalyRewardMult = 0.5; } },
+      { name: 'REALM DISTORTION', css: 'distortion', effect: () => { anomalyZoneMult = 0.7; syncZone.style.width = (zoneWidth * 0.7 * 100) + '%'; } },
+    ];
+
+    function triggerAnomaly() {
+      const anomaly = ANOMALIES[Math.floor(Math.random() * ANOMALIES.length)];
+      anomaly.effect();
+
+      anomalyBanner.textContent = '⚠ ' + anomaly.name;
+      anomalyBanner.className = 'sb-anomaly ' + anomaly.css + ' show';
+
+      setTimeout(() => {
+        anomalyBanner.classList.remove('show');
+      }, 2500);
+    }
+
+    // === NOTIFICATIONS ===
+    function showNotify(title, body, isGold = false) {
+      notify.querySelector('.nx-notify-title').textContent = title;
+      notify.querySelector('.nx-notify-body').textContent = body;
+      notify.className = 'nx-notify show' + (isGold ? ' gold' : '');
+      setTimeout(() => {
+        notify.classList.remove('show');
+      }, 3500);
+    }
+
+    // === HELP ===
+    helpBtn.addEventListener('click', () => helpOverlay.classList.add('show'));
+    closeHelp.addEventListener('click', () => helpOverlay.classList.remove('show'));
+    helpOverlay.addEventListener('click', (e) => {
+      if (e.target === helpOverlay) helpOverlay.classList.remove('show');
+    });
+
+    // === EVENTS ===
+    breakBtn.addEventListener('click', attemptBreak);
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        if (!breakBtn.disabled) attemptBreak();
+      }
+    });
+
+    // Gradually increase difficulty
+    setInterval(() => {
+      if (baseSpeed < 0.018) {
+        baseSpeed += 0.0003;
+      }
+    }, 15000);
+
+    // === START ===
+    init();
+  </script>
+</body>
+</html>

@@ -355,6 +355,75 @@ body {
   letter-spacing: 0.05em;
 }
 
+/* === NEXUS PROGRESSION BAR === */
+.nexus-progress-bar {
+  padding: 16px 2rem;
+  background: rgba(20, 16, 28, 0.7);
+  border-bottom: 1px solid rgba(138, 43, 226, 0.15);
+}
+
+.nexus-progress-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nexus-progress-level {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nexus-progress-level-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--purple-light), var(--purple-dark));
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.nexus-progress-level-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.nexus-progress-xp {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nexus-progress-xp-track {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(138, 43, 226, 0.12);
+  overflow: hidden;
+}
+
+.nexus-progress-xp-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--purple-dark), var(--purple-light));
+  transition: width 0.4s ease;
+}
+
+.nexus-progress-xp-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--purple-light);
+  white-space: nowrap;
+}
+
 /* === GAME GRID === */
 .nexus-game-grid {
   display: grid;
@@ -567,6 +636,9 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   box-shadow: 0 0 12px rgba(138, 43, 226, 0.3);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -575,6 +647,19 @@ body {
 .nexus-game-play:hover {
   transform: translateY(-1px);
   box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+}
+
+.nexus-game-card-locked {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.nexus-game-coming-soon {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-transform: uppercase;
 }
 
 /* === KEYFRAMES === */
@@ -972,6 +1057,22 @@ body {
   </div>
 </section>
 
+<!-- Nexus Progression Bar -->
+<div class="nexus-progress-bar" id="nexusProgress">
+  <div class="nexus-progress-inner">
+    <div class="nexus-progress-level">
+      <span class="nexus-progress-level-num" id="nxLevelNum">1</span>
+      <span class="nexus-progress-level-label">NEXUS LEVEL</span>
+    </div>
+    <div class="nexus-progress-xp">
+      <div class="nexus-progress-xp-track">
+        <div class="nexus-progress-xp-fill" id="nxXpFill" style="width:0%"></div>
+      </div>
+      <span class="nexus-progress-xp-text" id="nxXpText">0 XP</span>
+    </div>
+  </div>
+</div>
+
 <!-- Games Section -->
 <section class="nexus-section" id="games">
   <div class="nexus-section-header">
@@ -992,79 +1093,13 @@ body {
       </div>
       <div class="nexus-game-body">
         <h3 class="nexus-game-title">Vault Spin™</h3>
-        <p class="nexus-game-desc">Classic BlackVault slot experience with Orb symbols, Vault Keys, and realm crystal combinations.</p>
-        <div class="nexus-game-footer">
-          <div class="nexus-game-progress">
-            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:12%"></div></div>
-            <span class="nexus-game-progress-label">12% XP</span>
-          </div>
-          <button class="nexus-game-play" type="button">Play</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Orb Rush -->
-    <article class="nexus-game-card">
-      <div class="nexus-game-artwork game-art-orb-rush">
-        <div class="nexus-game-artwork-bg"></div>
-        <div class="nexus-game-artwork-icon">
-          <span class="material-symbols-outlined">bolt</span>
-        </div>
-        <span class="nexus-game-category">High Energy</span>
-      </div>
-      <div class="nexus-game-body">
-        <h3 class="nexus-game-title">Orb Rush™</h3>
-        <p class="nexus-game-desc">High-energy multi-reel Orb-based game with cascading signal fragments and multiplier surges.</p>
-        <div class="nexus-game-footer">
-          <div class="nexus-game-progress">
-            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:5%"></div></div>
-            <span class="nexus-game-progress-label">5% XP</span>
-          </div>
-          <button class="nexus-game-play" type="button">Play</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Nexus Megaways -->
-    <article class="nexus-game-card">
-      <div class="nexus-game-artwork game-art-megaways">
-        <div class="nexus-game-artwork-bg"></div>
-        <div class="nexus-game-artwork-icon">
-          <span class="material-symbols-outlined">grid_view</span>
-        </div>
-        <span class="nexus-game-category">Variable Reel</span>
-      </div>
-      <div class="nexus-game-body">
-        <h3 class="nexus-game-title">Nexus Megaways™</h3>
-        <p class="nexus-game-desc">Variable-reel gameplay with changing symbol combinations across Nexus dimensions and AI portraits.</p>
+        <p class="nexus-game-desc">Classic BlackVault reel experience with Orb symbols, Vault Keys, and realm crystal combinations.</p>
         <div class="nexus-game-footer">
           <div class="nexus-game-progress">
             <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:0%"></div></div>
-            <span class="nexus-game-progress-label">0% XP</span>
+            <span class="nexus-game-progress-label">FREE PLAY</span>
           </div>
-          <button class="nexus-game-play" type="button">Play</button>
-        </div>
-      </div>
-    </article>
-
-    <!-- Realm Jackpot -->
-    <article class="nexus-game-card">
-      <div class="nexus-game-artwork game-art-realm-jackpot">
-        <div class="nexus-game-artwork-bg"></div>
-        <div class="nexus-game-artwork-icon">
-          <span class="material-symbols-outlined">diamond</span>
-        </div>
-        <span class="nexus-game-category">Progressive</span>
-      </div>
-      <div class="nexus-game-body">
-        <h3 class="nexus-game-title">Realm Jackpot™</h3>
-        <p class="nexus-game-desc">Progressive in-system jackpot using Nexus progression rewards, realm access tiers, and achievement milestones.</p>
-        <div class="nexus-game-footer">
-          <div class="nexus-game-progress">
-            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:8%"></div></div>
-            <span class="nexus-game-progress-label">8% XP</span>
-          </div>
-          <button class="nexus-game-play" type="button">Play</button>
+          <a class="nexus-game-play" href="/nexus/games/vault-spin.html">Play</a>
         </div>
       </div>
     </article>
@@ -1076,17 +1111,17 @@ body {
         <div class="nexus-game-artwork-icon">
           <span class="material-symbols-outlined">sensors</span>
         </div>
-        <span class="nexus-game-category">Feature-Driven</span>
+        <span class="nexus-game-category">Timing / Signal</span>
       </div>
       <div class="nexus-game-body">
         <h3 class="nexus-game-title">Signal Break™</h3>
-        <p class="nexus-game-desc">Feature-driven game using signal detection, anomalies, multipliers, and bonus events from the BlackVault network.</p>
+        <p class="nexus-game-desc">Timing-based signal analysis game with streaks, anomalies, and multiplier surges.</p>
         <div class="nexus-game-footer">
           <div class="nexus-game-progress">
-            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:3%"></div></div>
-            <span class="nexus-game-progress-label">3% XP</span>
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:0%"></div></div>
+            <span class="nexus-game-progress-label">FREE PLAY</span>
           </div>
-          <button class="nexus-game-play" type="button">Play</button>
+          <a class="nexus-game-play" href="/nexus/games/signal-break.html">Play</a>
         </div>
       </div>
     </article>
@@ -1102,13 +1137,67 @@ body {
       </div>
       <div class="nexus-game-body">
         <h3 class="nexus-game-title">Vault Keys™</h3>
-        <p class="nexus-game-desc">Collection and unlock experience where players discover keys, artifacts, and realm access items across dimensions.</p>
+        <p class="nexus-game-desc">Collection and discovery experience where players scan nodes to find keys, artifacts, and realm access items.</p>
         <div class="nexus-game-footer">
           <div class="nexus-game-progress">
-            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:15%"></div></div>
-            <span class="nexus-game-progress-label">15% XP</span>
+            <div class="nexus-game-progress-bar"><div class="nexus-game-progress-fill" style="width:0%"></div></div>
+            <span class="nexus-game-progress-label">FREE PLAY</span>
           </div>
-          <button class="nexus-game-play" type="button">Play</button>
+          <a class="nexus-game-play" href="/nexus/games/vault-keys.html">Play</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Orb Rush — COMING SOON -->
+    <article class="nexus-game-card nexus-game-card-locked">
+      <div class="nexus-game-artwork game-art-orb-rush">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">bolt</span>
+        </div>
+        <span class="nexus-game-category">High Energy</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Orb Rush™</h3>
+        <p class="nexus-game-desc">High-energy multi-reel Orb-based game with cascading signal fragments and multiplier surges.</p>
+        <div class="nexus-game-footer">
+          <span class="nexus-game-coming-soon">COMING SOON</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Nexus Megaways — COMING SOON -->
+    <article class="nexus-game-card nexus-game-card-locked">
+      <div class="nexus-game-artwork game-art-megaways">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">grid_view</span>
+        </div>
+        <span class="nexus-game-category">Variable Reel</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Nexus Megaways™</h3>
+        <p class="nexus-game-desc">Variable-reel gameplay with changing symbol combinations across Nexus dimensions and AI portraits.</p>
+        <div class="nexus-game-footer">
+          <span class="nexus-game-coming-soon">COMING SOON</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Realm Jackpot — COMING SOON -->
+    <article class="nexus-game-card nexus-game-card-locked">
+      <div class="nexus-game-artwork game-art-realm-jackpot">
+        <div class="nexus-game-artwork-bg"></div>
+        <div class="nexus-game-artwork-icon">
+          <span class="material-symbols-outlined">diamond</span>
+        </div>
+        <span class="nexus-game-category">Progressive</span>
+      </div>
+      <div class="nexus-game-body">
+        <h3 class="nexus-game-title">Realm Jackpot™</h3>
+        <p class="nexus-game-desc">Progressive in-system jackpot using Nexus progression rewards, realm access tiers, and achievement milestones.</p>
+        <div class="nexus-game-footer">
+          <span class="nexus-game-coming-soon">COMING SOON</span>
         </div>
       </div>
     </article>
@@ -1155,6 +1244,24 @@ body {
     <p class="auth-switch">Don't have an account? <button type="button" class="auth-link">Sign Up</button></p>
   </div>
 </dialog>
+
+<script type="module">
+import { getState, getXPInfo } from './src/scripts/nexus-state.js';
+
+function updateNexusUI() {
+  const state = getState();
+  const xpInfo = getXPInfo(state);
+  const levelEl = document.getElementById('nxLevelNum');
+  const fillEl = document.getElementById('nxXpFill');
+  const textEl = document.getElementById('nxXpText');
+  if (levelEl) levelEl.textContent = state.level;
+  if (fillEl) fillEl.style.width = xpInfo.percent + '%';
+  if (textEl) textEl.textContent = state.xp.toLocaleString() + ' XP';
+}
+
+updateNexusUI();
+window.addEventListener('focus', updateNexusUI);
+</script>
 
 <script>
 (function() {
