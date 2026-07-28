@@ -591,6 +591,124 @@
       border-color: rgba(174,92,255,.4);
     }
 
+    /* === UNIVERSAL FLOATING MENU === */
+    .bv-float-toggle {
+      position: fixed;
+      z-index: 80;
+      bottom: 24px;
+      right: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid rgba(111, 25, 255, 0.25);
+      background: linear-gradient(135deg, #fff, #f8f5ff);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 0 20px rgba(111, 25, 255, 0.08);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .bv-float-toggle:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 36px rgba(0, 0, 0, 0.16), 0 0 28px rgba(111, 25, 255, 0.14);
+    }
+
+    .bv-float-toggle .material-symbols-outlined {
+      font-size: 22px;
+      color: #6f19ff;
+    }
+
+    .bv-float-panel {
+      position: fixed;
+      z-index: 79;
+      bottom: 86px;
+      right: 24px;
+      width: min(320px, 85vw);
+      max-height: 70vh;
+      overflow-y: auto;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(111, 25, 255, 0.12);
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 0 30px rgba(111, 25, 255, 0.06);
+      backdrop-filter: blur(18px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px) scale(0.96);
+      transition: opacity 0.22s, visibility 0.22s, transform 0.22s;
+    }
+
+    .bv-float-panel.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .bv-float-section {
+      margin-bottom: 14px;
+    }
+
+    .bv-float-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .bv-float-heading {
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #716b7a;
+      padding: 0 8px 5px;
+      margin: 0;
+    }
+
+    .bv-float-heading.active {
+      color: #6f19ff;
+    }
+
+    .bv-float-heading.active::after {
+      content: " — ACTIVE";
+      font-size: 0.52rem;
+      color: #16a34a;
+      letter-spacing: 0.12em;
+    }
+
+    .bv-float-link {
+      display: block;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: #44405a;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .bv-float-link:hover {
+      background: rgba(111, 25, 255, 0.06);
+      color: #6f19ff;
+    }
+
+    .bv-float-divider {
+      height: 1px;
+      background: rgba(111, 25, 255, 0.08);
+      margin: 10px 0;
+    }
+
+    @media (max-width: 640px) {
+      .bv-float-toggle {
+        bottom: 18px;
+        right: 18px;
+        width: 46px;
+        height: 46px;
+      }
+      .bv-float-panel {
+        bottom: 74px;
+        right: 18px;
+      }
+    }
+
     @media (max-width: 640px) {
       .cinematic-image-card {
         min-height: 390px;
@@ -618,7 +736,7 @@
 <div class="hidden items-center gap-3 lg:flex">
 <a class="secondary-button rounded-full px-5 py-3 text-sm font-semibold" href="#systems">View The iOE Systems™</a>
 <a class="primary-button rounded-full px-5 py-3 text-sm font-semibold" href="/nexus.html">
-          Nexus Gaming
+          Enter BlackVault Nexus™
         </a>
 </div>
 <button aria-controls="mobileMenu" aria-expanded="false" aria-label="Open navigation menu" class="grid h-11 w-11 place-items-center rounded-2xl border border-black/10 bg-white lg:hidden" id="menuButton" type="button">
@@ -628,7 +746,7 @@
 <div class="mobile-menu absolute inset-x-0 top-20 border-b border-black/[0.06] bg-white/96 px-5 py-5 shadow-soft lg:hidden" id="mobileMenu">
 <div class="mx-auto grid max-w-shell gap-2">
 <p class="px-4 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[.18em] text-vault-purple">BlackVault Nexus™</p>
-<a class="rounded-2xl px-4 py-2.5 font-semibold hover:bg-vault-soft" href="/nexus.html">Enter Nexus Gaming</a>
+<a class="rounded-2xl px-4 py-2.5 font-semibold hover:bg-vault-soft" href="/nexus.html">Enter BlackVault Nexus™</a>
 <a class="rounded-2xl px-4 py-2.5 pl-8 text-sm text-vault-muted hover:bg-vault-soft" href="/nexus.html#games">Games</a>
 <a class="rounded-2xl px-4 py-2.5 pl-8 text-sm text-vault-muted hover:bg-vault-soft" href="/nexus.html#profile">Profile</a>
 <a class="rounded-2xl px-4 py-2.5 pl-8 text-sm text-vault-muted hover:bg-vault-soft" href="/nexus.html#missions">Missions</a>
@@ -1103,6 +1221,32 @@
 </div>
 </section>
 </main>
+
+<!-- Universal BlackVault Floating Menu -->
+<button class="bv-float-toggle" id="bvFloatToggle" type="button" aria-label="BlackVault ecosystem menu">
+  <span class="material-symbols-outlined">grid_view</span>
+</button>
+<div class="bv-float-panel" id="bvFloatPanel">
+  <div class="bv-float-section">
+    <p class="bv-float-heading">BlackVault Nexus™</p>
+    <a class="bv-float-link" href="/nexus.html">Games</a>
+    <a class="bv-float-link" href="/nexus.html#missions">Missions</a>
+    <a class="bv-float-link" href="/nexus.html#rewards">Rewards</a>
+    <a class="bv-float-link" href="/nexus.html#collection">Collection</a>
+    <a class="bv-float-link" href="/nexus.html#profile">Profile</a>
+    <a class="bv-float-link" href="/nexus.html">Sign In / Sign Up</a>
+  </div>
+  <div class="bv-float-divider"></div>
+  <div class="bv-float-section">
+    <p class="bv-float-heading active">View The iOE™ Systems</p>
+    <a class="bv-float-link" href="#systems">iOE Systems™</a>
+    <a class="bv-float-link" href="#intelligence">AI Collective™</a>
+    <a class="bv-float-link" href="#universe">BlackVault Universe™</a>
+    <a class="bv-float-link" href="#platform">Core Card™</a>
+    <a class="bv-float-link" href="#company">Company / Platform</a>
+  </div>
+</div>
+
 <footer class="border-t border-black/[0.07] bg-white px-5 py-12 md:px-10 lg:px-16">
 <div class="mx-auto grid max-w-shell gap-10 md:grid-cols-[1fr_auto] md:items-end">
 <div>
@@ -1207,6 +1351,8 @@
       const orbStatus = document.getElementById("orbStatus");
       const steps = [...document.querySelectorAll("[data-step]")];
       const openUniverseButtons = [...document.querySelectorAll("[data-open-universe]")];
+      const bvFloatToggle = document.getElementById("bvFloatToggle");
+      const bvFloatPanel = document.getElementById("bvFloatPanel");
       let sequenceTimers = [];
 
       document.getElementById("copyrightYear").textContent = new Date().getFullYear();
@@ -1309,6 +1455,18 @@
       document.querySelectorAll("[data-close-universe]").forEach((link) => {
         link.addEventListener("click", closeUniverseModal);
       });
+
+      // Floating BlackVault ecosystem menu
+      if (bvFloatToggle && bvFloatPanel) {
+        bvFloatToggle.addEventListener("click", () => {
+          bvFloatPanel.classList.toggle("open");
+        });
+        document.addEventListener("click", (e) => {
+          if (!bvFloatPanel.contains(e.target) && !bvFloatToggle.contains(e.target)) {
+            bvFloatPanel.classList.remove("open");
+          }
+        });
+      }
 
       // Subtle cursor aura for pointer-based devices.
       if (window.matchMedia("(pointer: fine)").matches) {

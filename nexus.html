@@ -150,6 +150,29 @@ body {
   color: var(--purple-light);
 }
 
+.nexus-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nexus-nav-ecosystem {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.nexus-nav-ecosystem:hover {
+  color: var(--purple-light);
+  border-color: rgba(138, 43, 226, 0.5);
+  background: rgba(138, 43, 226, 0.08);
+}
+
 .nexus-nav-auth {
   font-size: 0.78rem;
   font-weight: 600;
@@ -590,6 +613,110 @@ body {
   padding: 0.4rem;
 }
 
+/* === UNIVERSAL FLOATING MENU === */
+.bv-float-toggle {
+  position: fixed;
+  z-index: 80;
+  bottom: 24px;
+  right: 24px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  background: linear-gradient(135deg, #1a1028, #0d0a14);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(138, 43, 226, 0.15);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bv-float-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.5), 0 0 28px rgba(138, 43, 226, 0.25);
+}
+
+.bv-float-toggle .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--purple-light);
+}
+
+.bv-float-panel {
+  position: fixed;
+  z-index: 79;
+  bottom: 86px;
+  right: 24px;
+  width: min(320px, 85vw);
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  background: linear-gradient(160deg, #14101c 0%, #0a0710 100%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(138, 43, 226, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.96);
+  transition: opacity 0.22s, visibility 0.22s, transform 0.22s;
+}
+
+.bv-float-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.bv-float-section {
+  margin-bottom: 16px;
+}
+
+.bv-float-section:last-child {
+  margin-bottom: 0;
+}
+
+.bv-float-heading {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 8px 6px;
+  margin: 0;
+}
+
+.bv-float-heading.active {
+  color: var(--purple-light);
+}
+
+.bv-float-heading.active::after {
+  content: " — ACTIVE";
+  font-size: 0.56rem;
+  color: var(--green, #4ade80);
+  letter-spacing: 0.12em;
+}
+
+.bv-float-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.bv-float-link:hover {
+  background: rgba(138, 43, 226, 0.1);
+  color: #fff;
+}
+
+.bv-float-divider {
+  height: 1px;
+  background: rgba(138, 43, 226, 0.15);
+  margin: 12px 0;
+}
+
 /* === AUTH DIALOG === */
 .auth-dialog {
   width: min(92vw, 440px);
@@ -730,6 +857,32 @@ body {
     display: block;
   }
 
+  .nexus-nav-actions {
+    gap: 6px;
+  }
+
+  .nexus-nav-ecosystem {
+    font-size: 0.70rem;
+    padding: 6px 10px;
+  }
+
+  .nexus-nav-auth {
+    font-size: 0.70rem;
+    padding: 6px 12px;
+  }
+
+  .bv-float-toggle {
+    bottom: 18px;
+    right: 18px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .bv-float-panel {
+    bottom: 74px;
+    right: 18px;
+  }
+
   .nexus-hero {
     padding: 3rem 1rem 2rem;
   }
@@ -786,13 +939,16 @@ body {
 
   <ul class="nexus-nav-links" id="navLinks">
     <li><a href="#games" class="active">Games</a></li>
-    <li><a href="#profile">Profile</a></li>
     <li><a href="#missions">Missions</a></li>
     <li><a href="#rewards">Rewards</a></li>
     <li><a href="#collection">Collection</a></li>
+    <li><a href="#profile">Profile</a></li>
   </ul>
 
-  <button class="nexus-nav-auth" id="navAuthButton" type="button">Sign In / Sign Up</button>
+  <div class="nexus-nav-actions">
+    <a class="nexus-nav-ecosystem" href="/home.html">View The iOE™ Systems</a>
+    <button class="nexus-nav-auth" id="navAuthButton" type="button">Sign In / Sign Up</button>
+  </div>
 </nav>
 
 <!-- Hero -->
@@ -960,6 +1116,31 @@ body {
   </div>
 </section>
 
+<!-- Universal BlackVault Floating Menu -->
+<button class="bv-float-toggle" id="bvFloatToggle" type="button" aria-label="BlackVault ecosystem menu">
+  <span class="material-symbols-outlined">grid_view</span>
+</button>
+<div class="bv-float-panel" id="bvFloatPanel">
+  <div class="bv-float-section">
+    <p class="bv-float-heading active">BlackVault Nexus™</p>
+    <a class="bv-float-link" href="#games">Games</a>
+    <a class="bv-float-link" href="#missions">Missions</a>
+    <a class="bv-float-link" href="#rewards">Rewards</a>
+    <a class="bv-float-link" href="#collection">Collection</a>
+    <a class="bv-float-link" href="#profile">Profile</a>
+    <a class="bv-float-link" href="#" id="bvFloatAuth">Sign In / Sign Up</a>
+  </div>
+  <div class="bv-float-divider"></div>
+  <div class="bv-float-section">
+    <p class="bv-float-heading">View The iOE™ Systems</p>
+    <a class="bv-float-link" href="/home.html">iOE Systems™</a>
+    <a class="bv-float-link" href="/home.html#intelligence">AI Collective™</a>
+    <a class="bv-float-link" href="/home.html#universe">BlackVault Universe™</a>
+    <a class="bv-float-link" href="/home.html#platform">Core Card™</a>
+    <a class="bv-float-link" href="/home.html#company">Company / Platform</a>
+  </div>
+</div>
+
 <!-- Auth Modal -->
 <dialog class="auth-dialog" id="authDialog">
   <div class="auth-card">
@@ -982,6 +1163,9 @@ body {
   const authButton = document.getElementById('navAuthButton');
   const authDialog = document.getElementById('authDialog');
   const authClose = document.getElementById('authClose');
+  const bvFloatToggle = document.getElementById('bvFloatToggle');
+  const bvFloatPanel = document.getElementById('bvFloatPanel');
+  const bvFloatAuth = document.getElementById('bvFloatAuth');
 
   navToggle.addEventListener('click', function() {
     navLinks.classList.toggle('open');
@@ -989,11 +1173,20 @@ body {
     icon.textContent = navLinks.classList.contains('open') ? 'close' : 'menu';
   });
 
-  authButton.addEventListener('click', function() {
+  function openAuthDialog() {
     if (typeof authDialog.showModal === 'function') {
       authDialog.showModal();
     }
-  });
+  }
+
+  authButton.addEventListener('click', openAuthDialog);
+  if (bvFloatAuth) {
+    bvFloatAuth.addEventListener('click', function(e) {
+      e.preventDefault();
+      bvFloatPanel.classList.remove('open');
+      openAuthDialog();
+    });
+  }
 
   authClose.addEventListener('click', function() {
     authDialog.close();
@@ -1001,6 +1194,16 @@ body {
 
   authDialog.addEventListener('click', function(e) {
     if (e.target === authDialog) authDialog.close();
+  });
+
+  bvFloatToggle.addEventListener('click', function() {
+    bvFloatPanel.classList.toggle('open');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!bvFloatPanel.contains(e.target) && !bvFloatToggle.contains(e.target)) {
+      bvFloatPanel.classList.remove('open');
+    }
   });
 })();
 </script>
