@@ -1,3 +1,7 @@
+HISTORICAL DESIGN PACKAGE — 2026-09-18
+
+The instructions below describe the original standalone visual prototype. Current SafeVault and Vault AI architecture is documented in the repository root README and the BlackVault Public Network documentation repository. This package is not the active wallet or agent implementation.
+
 BLACKVAULT IMMERSIVE WEBSITE PACKAGE
 
 ENTRY FILE
