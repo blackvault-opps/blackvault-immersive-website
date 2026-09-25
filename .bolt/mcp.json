@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "botpress_mcp": {
+      "enabled": true
+    }
+  }
+}
